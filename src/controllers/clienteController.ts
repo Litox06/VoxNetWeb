@@ -3,6 +3,7 @@ import sequelize from "../config/database";
 import { hashPassword } from "../utils/hash";
 import jwt from "jsonwebtoken";
 import { abbreviateAddress } from "../utils/address";
+import nodemailer from "nodemailer";
 import {
   IRegisterRequest,
   IGetUserAuthInfoRequest,
@@ -88,6 +89,14 @@ export const login = async (req: IGetUserAuthInfoRequest, res: Response) => {
   }
 };
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
 export const recoverPassword = async (
   req: IGetUserAuthInfoRequest,
   res: Response
@@ -110,7 +119,52 @@ export const recoverPassword = async (
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    res.status(200).json({ message: "Correo de recuperación enviado" });
+    const token = jwt.sign(
+      { idCliente: cliente.idCliente, correoCliente: cliente.correoCliente },
+      process.env.JWT_SECRET as string,
+      { expiresIn: "30m" }
+    );
+
+    const mailOptions = {
+      from: `"VoxNet Support" <${process.env.EMAIL_USER}>`,
+      to: cliente.correoCliente,
+      subject: "VoxNet Soporte: Instrucciones para Recuperar Contraseña",
+      text: `Hola ${cliente.nombreCliente},
+
+Hemos recibido una solicitud para restablecer tu contraseña de tu cuenta VoxNet. Por favor, haz clic en el siguiente enlace para restablecer tu contraseña:
+
+http://localhost:8080/reset-password/${token}
+
+Este enlace expirará en 30 minutos. Si no solicitaste un restablecimiento de contraseña, por favor ignora este correo o contacta a nuestro equipo de soporte.
+
+Gracias,
+Equipo de Soporte de VoxNet`,
+      html: `<p>Hola ${cliente.nombreCliente},</p>
+<p>Hemos recibido una solicitud para restablecer tu contraseña de tu cuenta VoxNet. Por favor, haz clic en el siguiente enlace para restablecer tu contraseña:</p>
+<p><a href="http://localhost:8080/reset-password/${token}">Restablecer Contraseña</a></p>
+<p>Este enlace expirará en 1 hora. Si no solicitaste un restablecimiento de contraseña, por favor ignora este correo o contacta a nuestro equipo de soporte.</p>
+<p>Gracias,<br>Equipo de Soporte de VoxNet</p>
+<p style="text-align:left;">
+  <img src="cid:logo" alt="VoxNet Logo" style="width:500px;height:auto;"/>
+</p>`,
+      attachments: [
+        {
+          filename: "logo.png",
+          path: "./assets/voxNetLogo.png",
+          cid: "logo",
+        },
+      ],
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error enviando email:", error);
+        return res
+          .status(500)
+          .json({ message: "Error enviando correo de recuperación" });
+      }
+      res.status(200).json({ message: "Correo de recuperación enviado" });
+    });
   } catch (error) {
     console.error("Error recuperando contraseña:", error);
     res.status(500).json({ message: "Error recuperando contraseña" });
