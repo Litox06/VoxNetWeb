@@ -1,6 +1,6 @@
 import { Response } from "express";
 import sequelize from "../config/database";
-import Cliente from "../models/cliente";
+import Cliente from "../models/clientes";
 import { IGetUserAuthInfoRequest } from "../interfaces/cliente";
 import { hashCredential } from "../utils/hash";
 

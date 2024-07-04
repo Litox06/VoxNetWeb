@@ -17,6 +17,7 @@ Cliente.init(
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
+      allowNull: false,
     },
     nombreCliente: {
       type: DataTypes.STRING(100),
