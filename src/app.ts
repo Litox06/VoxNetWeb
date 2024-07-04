@@ -11,7 +11,7 @@ const app = express();
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
-app.use("/api/protected", protectedRoutes);
+app.use("/api/client-portal", protectedRoutes);
 
 const PORT = 8080;
 sequelize;

@@ -6,20 +6,23 @@ import {
   deletePaymentMethod,
   getPaymentMethods,
 } from "../controllers/metodoPagoController";
+import { updateClientInfo } from "../controllers/clienteController";
 
 const router = Router();
 
 router.use(verifyToken);
 
-router.get("/protected", (req: IGetUserAuthInfoRequest, res: Response) => {
+router.get("/client-portal", (req: IGetUserAuthInfoRequest, res: Response) => {
   res.status(200).json({
-    message: `You have access to this protected route, userId: ${req.userId}`,
+    message: `You have access to the client portal, userId: ${req.userId}`,
   });
 });
 
-// paymentMethod routes
+// payment method routes
 router.post("/payment-methods/add", addPaymentMethod);
 router.get("/payment-methods/get", getPaymentMethods);
 router.delete("/payment-methods/delete/:idMetodoPago", deletePaymentMethod);
 
+// update client info route
+router.put("/profile/update", updateClientInfo);
 export default router;

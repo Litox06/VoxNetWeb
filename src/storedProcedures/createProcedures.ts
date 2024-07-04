@@ -109,6 +109,26 @@ export const createProcedures = async () => {
     END;
 `;
 
+  const createUpdateClienteProcedure = `
+    CREATE PROCEDURE UpdateClient(
+        IN input_idCliente INT,
+        IN input_telefonoCliente VARCHAR(15),
+        IN input_correoCliente VARCHAR(50),
+        IN input_direccionCliente VARCHAR(100),
+        IN input_newPasswordCliente VARCHAR(64)
+    )
+    BEGIN
+        UPDATE Clientes
+        SET 
+            telefonoCliente = COALESCE(input_telefonoCliente, telefonoCliente),
+            correoCliente = COALESCE(input_correoCliente, correoCliente),
+            direccionCliente = COALESCE(input_direccionCliente, direccionCliente),
+            passwordCliente = IF(input_newPasswordCliente IS NOT NULL, input_newPasswordCliente, passwordCliente),
+            updatedAt = NOW()
+        WHERE idCliente = input_idCliente;
+    END;
+`;
+
   try {
     let proceduresCreated = false;
 
@@ -147,6 +167,10 @@ export const createProcedures = async () => {
       proceduresCreated = true;
     }
 
+    if (!(await checkProcedureExistence("UpdateCliente"))) {
+      await sequelize.query(createUpdateClienteProcedure);
+      proceduresCreated = true;
+    }
     if (proceduresCreated) {
       console.log("Stored procedures created successfully");
     } else {
