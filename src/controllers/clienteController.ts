@@ -97,7 +97,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const recoverPassword = async (
+export const requestPasswordReset = async (
   req: IGetUserAuthInfoRequest,
   res: Response
 ) => {
@@ -168,5 +168,41 @@ Equipo de Soporte de VoxNet`,
   } catch (error) {
     console.error("Error recuperando contraseña:", error);
     res.status(500).json({ message: "Error recuperando contraseña" });
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    // Verificar token y extraer payload
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      idCliente: number;
+      correoCliente: string;
+    };
+
+    // Revisar payload descifrado
+    if (!decoded.correoCliente) {
+      throw new Error("Invalid token payload");
+    }
+
+    // Hashear nuevo password
+    const hashedPassword = hashPassword(newPassword);
+
+    // Actualizar el password en la db usando el stored procedure
+    await sequelize.query(
+      "CALL UpdatePasswordCliente(:correo, :newPasswordCliente)",
+      {
+        replacements: {
+          correo: decoded.correoCliente,
+          newPasswordCliente: hashedPassword,
+        },
+      }
+    );
+
+    res.status(200).json({ message: "Contraseña actualizada." });
+  } catch (error) {
+    console.error("Error actualizando contraseña:", error);
+    res.status(500).json({ message: "Error actualizando contraseña." });
   }
 };
