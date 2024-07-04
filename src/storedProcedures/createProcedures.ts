@@ -64,6 +64,23 @@ export const createProcedures = async () => {
     END;
   `;
 
+  const createInsertMetodoPagoProcedure = `
+    CREATE PROCEDURE InsertMetodoPago(
+        IN numeroTarjeta VARCHAR(64),
+        IN titularTarjeta VARCHAR(100),
+        IN vencimiento VARCHAR(5),
+        IN cvv VARCHAR(3),
+        IN idCliente INT
+    )
+    BEGIN
+        INSERT INTO MetodoPago (
+            numeroTarjeta, titularTarjeta, vencimiento, cvv, idCliente, createdAt, updatedAt
+        ) VALUES (
+            numeroTarjeta, titularTarjeta, vencimiento, cvv, idCliente, NOW(), NOW()
+        );
+    END;
+  `;
+
   try {
     let proceduresCreated = false;
 
@@ -81,6 +98,10 @@ export const createProcedures = async () => {
     }
     if (!(await checkProcedureExistence("UpdatePasswordCliente"))) {
       await sequelize.query(createUpdatePasswordClienteProcedure);
+      proceduresCreated = true;
+    }
+    if (!(await checkProcedureExistence("InsertMetodoPago"))) {
+      await sequelize.query(createInsertMetodoPagoProcedure);
       proceduresCreated = true;
     }
 

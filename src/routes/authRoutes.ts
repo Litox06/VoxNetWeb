@@ -4,7 +4,7 @@ import {
   login,
   requestPasswordReset,
   resetPassword,
-} from "../controllers/clienteController";
+} from "../controllers/autenticacionController";
 
 const router = Router();
 
