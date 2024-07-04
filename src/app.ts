@@ -3,6 +3,7 @@ import authRoutes from "./routes/authRoutes";
 import protectedRoutes from "./routes/protectedRoutes";
 import sequelize from "./config/database";
 import { createProcedures } from "./storedProcedures/createProcedures";
+import Cliente from "./models/cliente";
 
 const app = express();
 
@@ -11,8 +12,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/protected", protectedRoutes);
 
 const PORT = 8080;
-sequelize
-  .sync()
+sequelize;
+Cliente.sync()
   .then(async () => {
     console.log("Database synced");
 

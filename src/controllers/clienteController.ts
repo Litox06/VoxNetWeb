@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import sequelize from "../config/database";
-import { hashPassword } from "../utils/hash";
+import { hashCredential } from "../utils/hash";
 import jwt from "jsonwebtoken";
 import { abbreviateAddress } from "../utils/address";
 import nodemailer from "nodemailer";
@@ -22,7 +22,7 @@ export const register = async (req: IRegisterRequest, res: Response) => {
     cedulaCliente,
     password,
   } = req.body;
-  const hashedPassword = hashPassword(password);
+  const hashedPassword = hashCredential(password);
 
   // Abreviar la direccion
   const direccionCliente = abbreviateAddress(
@@ -71,7 +71,7 @@ export const login = async (req: IGetUserAuthInfoRequest, res: Response) => {
     if (!cliente) {
       return res.status(401).json({ message: "Usuario no encontrado" });
     }
-    const hashedPassword = hashPassword(password);
+    const hashedPassword = hashCredential(password);
     if (hashedPassword !== cliente.passwordCliente) {
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
@@ -187,7 +187,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     }
 
     // Hashear nuevo password
-    const hashedPassword = hashPassword(newPassword);
+    const hashedPassword = hashCredential(newPassword);
 
     // Actualizar el password en la db usando el stored procedure
     await sequelize.query(
