@@ -3,8 +3,8 @@ import { verifyToken } from "../middleware/auth";
 import { IGetUserAuthInfoRequest } from "../interfaces/cliente";
 import {
   addPaymentMethod,
-  // getPaymentMethods,
-  // deletePaymentMethod,
+  deletePaymentMethod,
+  getPaymentMethods,
 } from "../controllers/metodoPagoController";
 
 const router = Router();
@@ -18,8 +18,8 @@ router.get("/protected", (req: IGetUserAuthInfoRequest, res: Response) => {
 });
 
 // paymentMethod routes
-router.post("/payment-methods", addPaymentMethod); 
-// router.get("/payment-methods/:idCliente", getPaymentMethods); 
-// router.delete("/payment-methods/:idMetodoPago", deletePaymentMethod);
+router.post("/payment-methods/add", addPaymentMethod);
+router.get("/payment-methods/get", getPaymentMethods);
+router.delete("/payment-methods/delete/:idMetodoPago", deletePaymentMethod);
 
 export default router;

@@ -81,6 +81,34 @@ export const createProcedures = async () => {
     END;
   `;
 
+  const createGetPaymentMethodsProcedure = `
+  CREATE PROCEDURE GetPaymentMethods(
+      IN input_idCliente INT
+  )
+  BEGIN
+      SELECT * FROM MetodoPago WHERE idCliente = input_idCliente;
+  END;
+`;
+
+  const createCheckMetodoPagoOwnershipProcedure = `
+    CREATE PROCEDURE CheckMetodoPagoOwnership(
+        IN input_idMetodoPago INT,
+        IN input_idCliente INT
+    )
+    BEGIN
+        SELECT * FROM MetodoPago WHERE idMetodoPago = input_idMetodoPago AND idCliente = input_idCliente;
+    END;
+`;
+
+  const createDeleteMetodoPagoProcedure = `
+    CREATE PROCEDURE DeleteMetodoPago(
+        IN input_idMetodoPago INT
+    )
+    BEGIN
+        DELETE FROM MetodoPago WHERE idMetodoPago = input_idMetodoPago;
+    END;
+`;
+
   try {
     let proceduresCreated = false;
 
@@ -102,6 +130,20 @@ export const createProcedures = async () => {
     }
     if (!(await checkProcedureExistence("InsertMetodoPago"))) {
       await sequelize.query(createInsertMetodoPagoProcedure);
+      proceduresCreated = true;
+    }
+    if (!(await checkProcedureExistence("GetPaymentMethods"))) {
+      await sequelize.query(createGetPaymentMethodsProcedure);
+      proceduresCreated = true;
+    }
+
+    if (!(await checkProcedureExistence("DeleteMetodoPago"))) {
+      await sequelize.query(createDeleteMetodoPagoProcedure);
+      proceduresCreated = true;
+    }
+
+    if (!(await checkProcedureExistence("CheckMetodoPagoOwnership"))) {
+      await sequelize.query(createCheckMetodoPagoOwnershipProcedure);
       proceduresCreated = true;
     }
 
