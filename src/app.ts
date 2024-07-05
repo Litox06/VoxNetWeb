@@ -1,4 +1,7 @@
 import express from "express";
+import swaggerUi from "swagger-ui-express";
+import fs from "fs";
+import path from "path";
 import authRoutes from "./routes/authRoutes";
 import protectedRoutes from "./routes/protectedRoutes";
 import sequelize from "./config/database";
@@ -13,11 +16,19 @@ import ProductoFactura from "./models/productosFacturas";
 import Factura from "./models/facturas";
 import Comprobante from "./models/comprobante";
 import Categoria from "./models/categoria";
-import { Association } from "sequelize";
 
 const app = express();
 
+const swaggerDocument = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, "../swagger.json"), "utf8")
+);
+
 app.use(express.json());
+
+// Swagger setup
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// Define routes
 app.use("/api/auth", authRoutes);
 app.use("/api/client-portal", protectedRoutes);
 

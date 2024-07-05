@@ -12,7 +12,7 @@ const router = Router();
 
 router.use(verifyToken);
 
-router.get("/client-portal", (req: IGetUserAuthInfoRequest, res: Response) => {
+router.get("/", (req: IGetUserAuthInfoRequest, res: Response) => {
   res.status(200).json({
     message: `You have access to the client portal, userId: ${req.userId}`,
   });
