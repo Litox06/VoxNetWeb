@@ -17,6 +17,7 @@ Cliente.init(
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
+      allowNull: false,
     },
     nombreCliente: {
       type: DataTypes.STRING(100),
@@ -47,6 +48,9 @@ Cliente.init(
   {
     tableName: "Clientes",
     sequelize,
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
   }
 );
 
