@@ -42,6 +42,9 @@ Producto.init(
   {
     tableName: "Productos",
     sequelize,
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
   }
 );
 

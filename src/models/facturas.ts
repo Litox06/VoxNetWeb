@@ -1,11 +1,13 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/database";
+import Contrato from "./contratos";
 
 class Factura extends Model {
   public idFactura!: number;
   public idSucursal!: number;
   public idEmpleado!: number;
   public idCliente!: number;
+  public idContrato!: number;
   public idTipoComprobante!: number;
   public fechaFactura!: Date;
   public metodoPagoFactura!: string;
@@ -25,6 +27,14 @@ Factura.init(
     idCliente: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
+    },
+    idContrato: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      references: {
+        model: "Contratos",
+        key: "idContrato",
+      },
     },
     idTipoComprobante: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -54,6 +64,9 @@ Factura.init(
   {
     tableName: "Facturas",
     sequelize,
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
   }
 );
 

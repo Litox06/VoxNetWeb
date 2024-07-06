@@ -151,7 +151,7 @@ Equipo de Soporte de VoxNet`,
 <p>Este enlace expirará en 1 hora. Si no solicitaste un restablecimiento de contraseña, por favor ignora este correo o contacta a nuestro equipo de soporte.</p>
 <p>Gracias,<br>Equipo de Soporte de VoxNet</p>
 <p style="text-align:left;">
-  <img src="cid:logo" alt="VoxNet Logo" style="width:500px;height:auto;"/>
+  <img src="cid:logo" alt="VoxNet Logo" style="width:400px;height:auto;"/>
 </p>`,
       attachments: [
         {

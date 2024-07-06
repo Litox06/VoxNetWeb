@@ -21,6 +21,9 @@ Categoria.init(
   {
     tableName: "Categoria",
     sequelize,
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
   }
 );
 

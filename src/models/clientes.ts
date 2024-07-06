@@ -48,6 +48,9 @@ Cliente.init(
   {
     tableName: "Clientes",
     sequelize,
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
   }
 );
 

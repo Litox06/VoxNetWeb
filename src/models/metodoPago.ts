@@ -41,6 +41,9 @@ MetodoPago.init(
   {
     tableName: "MetodoPago",
     sequelize,
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
   }
 );
 

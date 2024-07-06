@@ -7,6 +7,7 @@ import ProductoFactura from "./productosFacturas";
 import Comprobante from "./comprobante";
 import Contrato from "./contratos";
 import Servicio from "./servicios";
+import ServiciosContrato from "./serviciosContratos";
 
 // Cliente has many MetodoPago
 Cliente.hasMany(MetodoPago, {
@@ -62,6 +63,18 @@ Factura.hasMany(ProductoFactura, {
   as: "productosFacturas",
 });
 
+// Factura belongs to Contrato
+Factura.belongsTo(Contrato, {
+  foreignKey: "idContrato",
+  as: "contrato",
+});
+
+// Contrato has many Factura
+Contrato.hasMany(Factura, {
+  foreignKey: "idContrato",
+  as: "facturas",
+});
+
 // ProductoFactura belongs to Factura
 ProductoFactura.belongsTo(Factura, {
   foreignKey: "idFactura",
@@ -102,4 +115,17 @@ Contrato.belongsTo(Servicio, {
 Servicio.hasMany(Contrato, {
   foreignKey: "idServicio",
   as: "contratos",
+});
+
+// Contratos with Servicios through ServiciosContrato
+Contrato.belongsToMany(Servicio, {
+  through: ServiciosContrato,
+  foreignKey: "idContrato",
+  otherKey: "idServicio",
+});
+
+Servicio.belongsToMany(Contrato, {
+  through: ServiciosContrato,
+  foreignKey: "idServicio",
+  otherKey: "idContrato",
 });

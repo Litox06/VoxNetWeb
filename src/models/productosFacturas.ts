@@ -20,6 +20,9 @@ ProductoFactura.init(
   {
     tableName: "ProductosFacturas",
     sequelize,
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
   }
 );
 

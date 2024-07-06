@@ -22,6 +22,9 @@ Comprobante.init(
   {
     tableName: "Comprobante",
     sequelize,
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
   }
 );
 

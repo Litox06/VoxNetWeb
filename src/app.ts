@@ -16,6 +16,7 @@ import ProductoFactura from "./models/productosFacturas";
 import Factura from "./models/facturas";
 import Comprobante from "./models/comprobante";
 import Categoria from "./models/categoria";
+import ServiciosContrato from "./models/serviciosContratos";
 
 const app = express();
 
@@ -34,15 +35,16 @@ app.use("/api/client-portal", protectedRoutes);
 
 const PORT = 8080;
 sequelize;
-Cliente.sync();
-MetodoPago.sync();
-Servicio.sync();
-Contrato.sync();
-Producto.sync();
 Categoria.sync();
-ProductoFactura.sync();
+Comprobante.sync();
+Cliente.sync();
+Servicio.sync();
+Producto.sync();
+MetodoPago.sync();
+Contrato.sync();
 Factura.sync();
-Comprobante.sync()
+ProductoFactura.sync();
+ServiciosContrato.sync()
   .then(async () => {
     console.log("Database synced");
 

@@ -31,6 +31,9 @@ Servicio.init(
   {
     tableName: "Servicios",
     sequelize,
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
   }
 );
 

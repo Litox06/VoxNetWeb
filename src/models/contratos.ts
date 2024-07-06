@@ -46,6 +46,9 @@ Contrato.init(
   {
     tableName: "Contratos",
     sequelize,
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
   }
 );
 
