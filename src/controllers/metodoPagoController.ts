@@ -2,7 +2,7 @@ import { Response } from "express";
 import sequelize from "../config/database";
 import Cliente from "../models/clientes";
 import { IGetUserAuthInfoRequest } from "../interfaces/cliente";
-import { hashCredential } from "../utils/hash";
+import { generateSalt, hashCredential } from "../utils/hash";
 
 export const addPaymentMethod = async (
   req: IGetUserAuthInfoRequest,
@@ -17,7 +17,8 @@ export const addPaymentMethod = async (
       return res.status(404).json({ message: "Cliente no encontrado" });
     }
 
-    const hashedNumeroTarjeta = hashCredential(numeroTarjeta);
+    const salt = generateSalt();
+    const hashedNumeroTarjeta = hashCredential(numeroTarjeta, salt);
 
     await sequelize.query(
       "CALL InsertMetodoPago(:numeroTarjeta, :titularTarjeta, :vencimiento, :cvv, :idCliente)",

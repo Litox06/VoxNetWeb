@@ -1,7 +1,7 @@
 import { Response } from "express";
 import sequelize from "../config/database";
 import { IGetUserAuthInfoRequest } from "../interfaces/cliente";
-import { hashCredential } from "../utils/hash";
+import { generateSalt, hashCredential } from "../utils/hash";
 
 export const updateClientInfo = async (
   req: IGetUserAuthInfoRequest,
@@ -12,7 +12,12 @@ export const updateClientInfo = async (
   const idCliente = req.userId;
 
   try {
-    const hashedPassword = newPassword ? hashCredential(newPassword) : null;
+    let hashedPassword = null;
+
+    if (newPassword) {
+      const salt = generateSalt();
+      hashedPassword = hashCredential(newPassword, salt);
+    }
 
     await sequelize.query(
       "CALL UpdateClient(:input_idCliente, :input_telefonoCliente, :input_correoCliente, :input_direccionCliente, :input_newPasswordCliente)",

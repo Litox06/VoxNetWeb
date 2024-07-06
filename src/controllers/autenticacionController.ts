@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import sequelize from "../config/database";
-import { hashCredential } from "../utils/hash";
+import { generateSalt, hashCredential } from "../utils/hash";
 import jwt from "jsonwebtoken";
 import { abbreviateAddress } from "../utils/address";
 import nodemailer from "nodemailer";
@@ -22,7 +22,9 @@ export const register = async (req: IRegisterRequest, res: Response) => {
     cedulaCliente,
     password,
   } = req.body;
-  const hashedPassword = hashCredential(password);
+
+  const salt = generateSalt();
+  const hashedPassword = hashCredential(password, salt);
 
   // Abreviar la direccion
   const direccionCliente = abbreviateAddress(
@@ -65,14 +67,18 @@ export const login = async (req: IGetUserAuthInfoRequest, res: Response) => {
         replacements: { correo: correoCliente },
       }
     );
-    // Asignar directamente los resultado a Cliente
+    // Asignar directamente los resultados a Cliente
     const cliente = results as ICliente;
 
     if (!cliente) {
       return res.status(401).json({ message: "Usuario no encontrado" });
     }
-    const hashedPassword = hashCredential(password);
-    if (hashedPassword !== cliente.passwordCliente) {
+
+    const storedHashedPassword = cliente.passwordCliente;
+    const salt = storedHashedPassword.slice(-8);
+    const hashedPassword = hashCredential(password, salt);
+
+    if (hashedPassword !== storedHashedPassword) {
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
@@ -186,8 +192,8 @@ export const resetPassword = async (req: Request, res: Response) => {
       throw new Error("Invalid token payload");
     }
 
-    // Hashear nuevo password
-    const hashedPassword = hashCredential(newPassword);
+    const salt = generateSalt();
+    const hashedPassword = hashCredential(newPassword, salt);
 
     // Actualizar el password en la db usando el stored procedure
     await sequelize.query(
