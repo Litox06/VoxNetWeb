@@ -236,6 +236,54 @@
           "500": { "description": "Error updating client information" }
         }
       }
+    },
+    "/api/client-portal/services/subscribe": {
+      "post": {
+        "summary": "Subscribe to a service",
+        "description": "Allows a client to subscribe to a service, setting up a contract and initializing billing.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["idServicio"],
+                "properties": {
+                  "idServicio": {
+                    "type": "integer",
+                    "description": "The ID of the service to subscribe to"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Subscription successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          },
+          "404": {
+            "description": "Service not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
   "components": {

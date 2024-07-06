@@ -1,6 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/database";
-import Factura from "./facturas";
 
 class Comprobante extends Model {
   public idTipoComprobante!: number;
@@ -17,6 +16,7 @@ Comprobante.init(
     tipoComprobante: {
       type: DataTypes.STRING(20),
       allowNull: false,
+      defaultValue: "N/A",
     },
   },
   {

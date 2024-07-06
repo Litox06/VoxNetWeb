@@ -7,6 +7,7 @@ import {
   getPaymentMethods,
 } from "../controllers/metodoPagoController";
 import { updateClientInfo } from "../controllers/clienteController";
+import { subscribeToService } from "../controllers/serviciosController";
 
 const router = Router();
 
@@ -18,11 +19,15 @@ router.get("/", (req: IGetUserAuthInfoRequest, res: Response) => {
   });
 });
 
-// payment method routes
+// Update profile info route
+router.put("/profile/update", updateClientInfo);
+
+// Payment method routes
 router.post("/payment-methods/add", addPaymentMethod);
 router.get("/payment-methods/get", getPaymentMethods);
 router.delete("/payment-methods/delete/:idMetodoPago", deletePaymentMethod);
 
-// update client info route
-router.put("/profile/update", updateClientInfo);
+// Services routes
+router.post("/services/subscribe", subscribeToService);
+
 export default router;

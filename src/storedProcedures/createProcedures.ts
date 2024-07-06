@@ -148,6 +148,87 @@ export const createProcedures = async () => {
         END;
       `,
     },
+    {
+      name: "SubscribeToService",
+      sql: `
+        CREATE PROCEDURE SubscribeToService(
+            IN input_idCliente INT,
+            IN input_idServicio INT
+        )
+        BEGIN
+            DECLARE contractCreated INT;
+            DECLARE defaultTipoComprobante INT;
+            DECLARE serviceDescription VARCHAR(255);
+            
+            -- Get the default idTipoComprobante
+            SELECT idTipoComprobante INTO defaultTipoComprobante FROM Comprobante WHERE tipoComprobante = 'N/A' LIMIT 1;
+            
+            -- Get the service description
+            SELECT descripcionServicio INTO serviceDescription FROM Servicios WHERE idServicio = input_idServicio LIMIT 1;
+            
+            -- Debugging: Check if the serviceDescription is correctly retrieved
+            IF serviceDescription IS NULL THEN
+                SET serviceDescription = 'No description available';
+            END IF;
+            
+            -- Create a new contract
+            INSERT INTO Contratos (
+                idCliente,
+                idServicio,
+                fechaInicioContrato,
+                fechaFinContrato,
+                descripcionContrato,
+                estadoContrato,
+                createdAt,
+                updatedAt
+            ) VALUES (
+                input_idCliente,
+                input_idServicio,
+                NOW(),
+                DATE_ADD(NOW(), INTERVAL 1 MONTH),
+                serviceDescription,
+                'Pago Pendiente',
+                NOW(),
+                NOW()
+            );
+            
+            -- Get the ID of the newly created contract
+            SET contractCreated = LAST_INSERT_ID();
+            
+            -- Prepare initial billing (Factura)
+            INSERT INTO Facturas (
+                idCliente,
+                idContrato,
+                idTipoComprobante,
+                fechaFactura,
+                metodoPagoFactura,
+                impuestosFactura, -- ITBIS tax
+                totalFactura,     -- Total including ISC and ITBIS tax
+                iscFactura,       -- ISC tax
+                createdAt,
+                updatedAt
+            ) VALUES (
+                input_idCliente,
+                contractCreated,
+                defaultTipoComprobante, -- Use the default idTipoComprobante
+                NOW(),
+                'Pendiente',
+                (SELECT precioServicio * 0.18 FROM Servicios WHERE idServicio = input_idServicio), -- ITBIS tax - 18%
+                (SELECT precioServicio * 1.28 FROM Servicios WHERE idServicio = input_idServicio), -- Total including ISC and ITBIS tax
+                (SELECT precioServicio * 0.10 FROM Servicios WHERE idServicio = input_idServicio), -- ISC tax - 10%
+                NOW(),
+                NOW()
+            );
+            
+            -- Check if everything went well
+            IF contractCreated > 0 THEN
+                SELECT 'Contract and pending billing created successfully' AS message;
+            ELSE
+                SELECT 'Failed to create contract or billing' AS message;
+            END IF;
+        END;
+      `,
+    },
   ];
 
   try {
