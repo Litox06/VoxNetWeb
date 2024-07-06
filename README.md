@@ -17,7 +17,7 @@ VoxNet, derived from the Latin words "Vox" (meaning voice) and "Network," repres
 - **Database**: MySQL with Sequelize ORM
 - **Languages**: TypeScript
 
-## Disclaimer
+## Disclaimer ⚠️
 Any reference to or similarity with existing companies or copyrighted content within VoxNet is purely coincidental and unintentional. This project is an original work intended for educational and demonstration purposes. If you believe that any part of this project infringes on copyrighted material or resembles a real company's proprietary service, please contact us immediately for review and potential removal or modification of the content.
 
 ## License 📄
