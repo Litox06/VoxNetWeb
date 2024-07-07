@@ -710,6 +710,83 @@ export const createProcedures = async () => {
       `,
     },
     {
+      name: "InsertAllCategorias",
+      sql: `
+          CREATE PROCEDURE InsertAllCategorias()
+          BEGIN
+              -- Insertar categorías
+              INSERT INTO Categoria (categoriaProducto, createdAt, updatedAt) VALUES 
+                  ('Smartphones', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+                  ('TVs', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+                  ('Teléfonos', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+                  ('Modem para WiFi', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+          END;
+      `,
+    },
+    {
+      name: "InsertAllProductos",
+      sql: `
+        CREATE PROCEDURE InsertAllProductos()
+        BEGIN
+            -- Insertar productos de la categoría 'Smartphones'
+            INSERT INTO Productos (idCategoriaPro, nombreProducto, descripcionProducto, precioProducto, disponibilidadProducto, createdAt, updatedAt)
+            VALUES 
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Smartphones'), 'iPhone 13', '128GB, Midnight', 79990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Smartphones'), 'Samsung Galaxy S21', '128GB, Phantom Gray', 69990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Smartphones'), 'Google Pixel 6', '128GB, Stormy Black', 59990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Smartphones'), 'OnePlus 9', '128GB, Astral Black', 49990, FALSE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Smartphones'), 'Sony Xperia 1 III', '256GB, Frosted Black', 119990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Smartphones'), 'Xiaomi Mi 11', '128GB, Horizon Blue', 44990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Smartphones'), 'Oppo Find X3 Pro', '256GB, Gloss Black', 109990, FALSE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Smartphones'), 'Huawei P40 Pro', '256GB, Silver Frost', 84990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Smartphones'), 'Asus ROG Phone 5', '256GB, Phantom Black', 99990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Smartphones'), 'Nokia 8.3 5G', '128GB, Polar Night', 39990, FALSE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+    
+            -- Insertar productos de la categoría 'TVs'
+            INSERT INTO Productos (idCategoriaPro, nombreProducto, descripcionProducto, precioProducto, disponibilidadProducto, createdAt, updatedAt)
+            VALUES 
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'TVs'), 'Samsung QLED 4K', '65 inch, Q80A', 119990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'TVs'), 'LG OLED 4K', '55 inch, C1 Series', 129990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'TVs'), 'Sony Bravia 4K', '75 inch, X90J', 149990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'TVs'), 'TCL Roku TV', '50 inch, 4 Series', 39990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'TVs'), 'Vizio Smart TV', '70 inch, V-Series', 89990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'TVs'), 'Hisense ULED 4K', '65 inch, U6G', 74990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'TVs'), 'Panasonic LED TV', '40 inch, HX700', 19990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'TVs'), 'Philips Ambilight', '55 inch, PUS7906', 69990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'TVs'), 'Sharp 4K UHD', '60 inch, Aquos', 54990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'TVs'), 'Toshiba Fire TV', '43 inch, LF621U21', 29990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+    
+            -- Insertar productos de la categoría 'Teléfonos'
+            INSERT INTO Productos (idCategoriaPro, nombreProducto, descripcionProducto, precioProducto, disponibilidadProducto, createdAt, updatedAt)
+            VALUES 
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Teléfonos'), 'Panasonic Cordless Phone', 'KX-TG6845', 5990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Teléfonos'), 'VTech DECT 6.0', 'CS6719-2', 4990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Teléfonos'), 'AT&T Corded Phone', 'CL2940', 3990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Teléfonos'), 'Motorola DECT 6.0', 'CD5011', 6990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Teléfonos'), 'Uniden DECT 6.0', 'D1760-2', 7990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Teléfonos'), 'Philips Cordless Phone', 'XL4901S', 8990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Teléfonos'), 'GE Digital Phone', '30524EE1', 3490, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Teléfonos'), 'RCA Cordless Phone', '25424RE1', 7990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Teléfonos'), 'Alcatel Corded Phone', 'T56', 2990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Teléfonos'), 'Siemens Gigaset', 'A120', 4990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+    
+            -- Insertar productos de la categoría 'Modem para WiFi'
+            INSERT INTO Productos (idCategoriaPro, nombreProducto, descripcionProducto, precioProducto, disponibilidadProducto, createdAt, updatedAt)
+            VALUES 
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Modem para WiFi'), 'Netgear Nighthawk', 'AC1900 Smart WiFi Router', 7990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Modem para WiFi'), 'TP-Link Archer', 'A7 AC1750 Wireless', 4990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Modem para WiFi'), 'Asus RT-AC66U', 'Dual-Band Gigabit Router', 9990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Modem para WiFi'), 'Linksys EA7300', 'Max-Stream AC1750', 5990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Modem para WiFi'), 'Motorola MG7550', '16x4 Cable Modem', 11990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Modem para WiFi'), 'Arris Surfboard', 'SBG6700AC', 8990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Modem para WiFi'), 'D-Link AC1200', 'WiFi Router', 3990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Modem para WiFi'), 'Google Nest WiFi', 'Router and Point', 13990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Modem para WiFi'), 'Eero Pro 6', 'Mesh WiFi Router', 19990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+            ((SELECT idCategoriaPro FROM Categoria WHERE categoriaProducto = 'Modem para WiFi'), 'Netgear Orbi', 'Tri-band WiFi System', 17990, TRUE, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+        END;
+      `,
+    },
+    {
       name: "GetAllServices",
       sql: `
         CREATE PROCEDURE GetAllServices()

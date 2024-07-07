@@ -18,7 +18,7 @@ Producto.init(
       primaryKey: true,
       allowNull: false,
     },
-    idCategoriaProducto: {
+    idCategoriaPro: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },

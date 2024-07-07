@@ -50,35 +50,45 @@ ServiciosContrato.sync()
 
     await createProcedures();
 
-    const comprobanteCount = await Comprobante.count({
-      where: { tipoComprobante: "N/A" },
-    });
-    if (comprobanteCount === 0) {
-      try {
+    await insertIfNotExists(
+      Comprobante,
+      { tipoComprobante: "N/A" },
+      async () => {
         await Comprobante.create({
           tipoComprobante: "N/A",
           createdAt: new Date(),
           updatedAt: new Date(),
         });
-        console.log("Default Comprobante inserted successfully");
-      } catch (error) {
-        console.error("Error inserting default Comprobante:", error);
-      }
-    } else {
-      console.log("Default Comprobante already exists. Skipping insertion.");
-    }
+      },
+      "Default Comprobante"
+    );
 
-    const servicesCount = await Servicio.count();
-    if (servicesCount === 0) {
-      try {
-        const result = await sequelize.query("CALL InsertAllServices()");
-        console.log("Services inserted successfully");
-      } catch (error) {
-        console.error("Error inserting services:", error);
-      }
-    } else {
-      console.log("Services already exist. Skipping insertion.");
-    }
+    await insertIfNotExists(
+      Servicio,
+      {},
+      async () => {
+        await sequelize.query("CALL InsertAllServices()");
+      },
+      "Services"
+    );
+
+    await insertIfNotExists(
+      Categoria,
+      {},
+      async () => {
+        await sequelize.query("CALL InsertAllCategorias()");
+      },
+      "Categories"
+    );
+
+    await insertIfNotExists(
+      Producto,
+      {},
+      async () => {
+        await sequelize.query("CALL InsertAllProductos()");
+      },
+      "Products"
+    );
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
     });
@@ -86,3 +96,23 @@ ServiciosContrato.sync()
   .catch((error) => {
     console.error("Unable to sync the database:", error);
   });
+
+const insertIfNotExists = async (
+  model: any,
+  whereCondition: any,
+  insertFunction: () => Promise<void>,
+  entityName: string
+) => {
+  try {
+    const count = await model.count({ where: whereCondition });
+
+    if (count === 0) {
+      await insertFunction();
+      console.log(`${entityName} inserted successfully`);
+    } else {
+      console.log(`${entityName} already exists. Skipping insertion.`);
+    }
+  } catch (error) {
+    console.error(`Error inserting ${entityName}:`, error);
+  }
+};
