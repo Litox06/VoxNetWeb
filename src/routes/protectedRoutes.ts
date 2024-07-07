@@ -7,8 +7,11 @@ import {
   getPaymentMethods,
 } from "../controllers/metodoPagoController";
 import { updateClientInfo } from "../controllers/clienteController";
-import { subscribeToService } from "../controllers/serviciosController";
-import { subscribeToBundle } from "../controllers/serviciosBundleController";
+import {
+  subscribeToService,
+  subscribeToBundle,
+  getSubscribedServices
+} from "../controllers/serviciosController";
 
 const router = Router();
 
@@ -31,5 +34,5 @@ router.delete("/payment-methods/delete/:idMetodoPago", deletePaymentMethod);
 // Services routes
 router.post("/services/subscribe", subscribeToService);
 router.post("/services/subscribe-bundle", subscribeToBundle);
-
+router.get("/services/subscribed", getSubscribedServices);
 export default router;

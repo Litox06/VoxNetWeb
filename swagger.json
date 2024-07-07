@@ -335,6 +335,35 @@
           }
         }
       }
+    },
+    "/api/client-portal/services/subscribed": {
+      "get": {
+        "summary": "Get subscribed services",
+        "description": "Fetches all services the client is subscribed to along with their contract states.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "List of subscribed services",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "nombreServicio": { "type": "string" },
+                      "estadoContrato": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error fetching subscribed services"
+          }
+        }
+      }
     }
   },
   "components": {

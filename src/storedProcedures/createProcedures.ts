@@ -405,6 +405,30 @@ export const createProcedures = async () => {
       `,
     },
     {
+      name: "GetSubscribedServices",
+      sql: `
+        CREATE PROCEDURE GetSubscribedServices(
+            IN input_idCliente INT
+        )
+        BEGIN
+            SELECT 
+                s.idServicio,
+                s.nombreServicio,
+                s.descripcionServicio,
+                s.precioServicio,
+                c.estadoContrato,
+                c.fechaInicioContrato,
+                c.fechaFinContrato
+            FROM 
+                Servicios s
+            JOIN 
+                Contratos c ON s.idServicio = c.idServicio
+            WHERE 
+                c.idCliente = input_idCliente;
+        END;
+      `,
+    },
+    {
       name: "InsertAllServices",
       sql: `
         CREATE PROCEDURE InsertAllServices()
