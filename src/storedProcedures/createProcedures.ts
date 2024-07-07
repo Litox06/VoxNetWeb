@@ -901,6 +901,56 @@ export const createProcedures = async () => {
         END;
       `,
     },
+    {
+      name: "RemoveProductoFromFactura",
+      sql: `
+        CREATE PROCEDURE RemoveProductoFromFactura(
+            IN input_idFactura INT,
+            IN input_idProducto INT
+        )
+        BEGIN
+            DECLARE productPrice DECIMAL(10, 2);
+            DECLARE impuestosFactura DECIMAL(10, 2);
+            DECLARE totalFactura DECIMAL(10, 2);
+        
+            -- Get the product price
+            SELECT precioProducto INTO productPrice 
+            FROM Productos 
+            WHERE idProducto = input_idProducto 
+            LIMIT 1;
+        
+            -- Calculate the new totals
+            SET impuestosFactura = productPrice * 0.18;
+            SET totalFactura = productPrice * 1.18;
+        
+            -- Remove the product from the invoice
+            DELETE FROM ProductosFacturas 
+            WHERE idFactura = input_idFactura 
+            AND idProducto = input_idProducto;
+        
+            -- Update the factura totals
+            UPDATE Facturas 
+            SET 
+                impuestosFactura = impuestosFactura - impuestosFactura,
+                totalFactura = totalFactura - totalFactura,
+                updatedAt = CURRENT_TIMESTAMP()
+            WHERE idFactura = input_idFactura;
+            
+            -- Check if the factura has any products left
+            IF (SELECT COUNT(*) FROM ProductosFacturas WHERE idFactura = input_idFactura) = 0 THEN
+                -- Delete the factura if no products are left
+                DELETE FROM Facturas WHERE idFactura = input_idFactura;
+            END IF;
+        
+            -- Check if everything went well
+            IF ROW_COUNT() > 0 THEN
+                SELECT 'Product removed from invoice successfully' AS message;
+            ELSE
+                SELECT 'Failed to remove product from invoice' AS message;
+            END IF;
+        END;
+      `,
+    },
   ];
 
   try {

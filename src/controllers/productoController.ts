@@ -48,3 +48,28 @@ export const getAllProducts = async (
     res.status(500).json({ message: "Server error during retrieval process" });
   }
 };
+
+export const removeProductoFromFactura = async (
+  req: IGetUserAuthInfoRequest,
+  res: Response
+) => {
+  const { idFactura, idProducto } = req.body;
+
+  try {
+    // Calling the stored procedure
+    const result = await sequelize.query(
+      "CALL RemoveProductoFromFactura(:idFactura, :idProducto)",
+      {
+        replacements: {
+          idFactura,
+          idProducto,
+        },
+      }
+    );
+
+    return res.status(200).json(result[0]);
+  } catch (error) {
+    console.error("Error removing product from invoice:", error);
+    res.status(500).json({ message: "Server error during removal process" });
+  }
+};
