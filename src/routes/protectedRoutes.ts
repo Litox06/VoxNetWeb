@@ -15,7 +15,7 @@ import {
   getAllServices,
   cancelService,
 } from "../controllers/serviciosController";
-import { comprarProducto } from "../controllers/productoController";
+import { comprarProducto, getAllProducts } from "../controllers/productoController";
 
 const router = Router();
 
@@ -45,5 +45,5 @@ router.delete("/services/cancel", cancelService);
 
 // Product routes
 router.post("/products/buy", comprarProducto);
-
+router.get("/products/get-all", getAllProducts);
 export default router;

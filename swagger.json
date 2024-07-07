@@ -606,6 +606,96 @@
           }
         }
       }
+    },
+    "/api/client-portal/products/get-all": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Retrieve all products",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Products retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Products retrieved successfully"
+                    },
+                    "products": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "idProducto": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "idCategoriaPro": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "nombreProducto": {
+                            "type": "string",
+                            "example": "iPhone 13"
+                          },
+                          "descripcionProducto": {
+                            "type": "string",
+                            "example": "128GB, Midnight"
+                          },
+                          "precioProducto": {
+                            "type": "number",
+                            "format": "float",
+                            "example": 79990.0
+                          },
+                          "disponibilidadProducto": {
+                            "type": "boolean",
+                            "example": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No products found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "No products found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error during retrieval process",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Server error during retrieval process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

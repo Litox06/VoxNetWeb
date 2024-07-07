@@ -884,6 +884,23 @@ export const createProcedures = async () => {
         END;
       `,
     },
+    {
+      name: "GetAllProducts",
+      sql: `
+        CREATE PROCEDURE GetAllProducts()
+        BEGIN
+            SELECT 
+                idProducto,
+                idCategoriaPro,
+                nombreProducto,
+                descripcionProducto,
+                precioProducto,
+                disponibilidadProducto
+            FROM 
+                Productos;
+        END;
+      `,
+    },
   ];
 
   try {

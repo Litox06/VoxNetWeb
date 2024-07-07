@@ -26,3 +26,25 @@ export const comprarProducto = async (
     res.status(500).json({ message: "Server error during purchase process" });
   }
 };
+
+export const getAllProducts = async (
+  req: IGetUserAuthInfoRequest,
+  res: Response
+) => {
+  try {
+    // Calling the stored procedure
+    const result = await sequelize.query("CALL GetAllProducts()");
+
+    if (result) {
+      return res.status(200).json({
+        message: "Products retrieved successfully",
+        products: result,
+      });
+    } else {
+      return res.status(404).json({ message: "No products found" });
+    }
+  } catch (error) {
+    console.error("Error retrieving products:", error);
+    res.status(500).json({ message: "Server error during retrieval process" });
+  }
+};
