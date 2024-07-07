@@ -283,6 +283,128 @@ export const createProcedures = async () => {
       `,
     },
     {
+      name: "SubscribeToBundle",
+      sql: `
+        CREATE PROCEDURE SubscribeToBundle(
+            IN input_idCliente INT,
+            IN input_idServicios JSON
+        )
+        BEGIN
+            DECLARE contractCreated INT;
+            DECLARE defaultTipoComprobante INT;
+            DECLARE serviceDescription VARCHAR(255);
+            DECLARE existingFacturaId INT;
+            DECLARE existingContratoId INT;
+            DECLARE totalImpuestosFactura DECIMAL(10, 2) DEFAULT 0;
+            DECLARE totalFactura DECIMAL(10, 2) DEFAULT 0;
+            DECLARE totalIscFactura DECIMAL(10, 2) DEFAULT 0;
+            DECLARE servicePrice DECIMAL(10, 2);
+            DECLARE serviceCount INT DEFAULT 0;
+    
+            -- Get the default idTipoComprobante
+            SELECT idTipoComprobante INTO defaultTipoComprobante FROM Comprobante WHERE tipoComprobante = 'N/A' LIMIT 1;
+    
+            -- Check for existing factura with state 'Pendiente de Activación: Pago Requerido'
+            SELECT f.idFactura, c.idContrato INTO existingFacturaId, existingContratoId
+            FROM Facturas f
+            JOIN Contratos c ON f.idContrato = c.idContrato
+            WHERE c.idCliente = input_idCliente AND c.estadoContrato = 'Pendiente de Activación: Pago Requerido' LIMIT 1;
+    
+            -- Loop through each service ID in the JSON array
+            SET serviceCount = JSON_LENGTH(input_idServicios);
+            WHILE serviceCount > 0 DO
+                SET @serviceId = JSON_UNQUOTE(JSON_EXTRACT(input_idServicios, CONCAT('$[', serviceCount - 1, ']')));
+                
+                -- Get the service description and price
+                SELECT descripcionServicio, precioServicio INTO serviceDescription, servicePrice FROM Servicios WHERE idServicio = @serviceId LIMIT 1;
+                
+                -- Debugging: Check if the serviceDescription is correctly retrieved
+                IF serviceDescription IS NULL THEN
+                    SET serviceDescription = 'No description available';
+                END IF;
+    
+                -- Calculate the taxes
+                SET totalImpuestosFactura = totalImpuestosFactura + (servicePrice * 0.18);
+                SET totalFactura = totalFactura + (servicePrice * 1.28);
+                SET totalIscFactura = totalIscFactura + (servicePrice * 0.10);
+    
+                -- Create a new contract for each service
+                INSERT INTO Contratos (
+                    idCliente,
+                    idServicio,
+                    fechaInicioContrato,
+                    fechaFinContrato,
+                    descripcionContrato,
+                    estadoContrato,
+                    createdAt,
+                    updatedAt
+                ) VALUES (
+                    input_idCliente,
+                    @serviceId,
+                    CURRENT_TIMESTAMP(),
+                    DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL 1 MONTH),
+                    serviceDescription,
+                    'Pendiente de Activación: Pago Requerido',
+                    CURRENT_TIMESTAMP(),
+                    CURRENT_TIMESTAMP()
+                );
+                
+                -- Get the ID of the newly created contract
+                SET contractCreated = LAST_INSERT_ID();
+                
+                -- Update existing factura or create a new one
+                IF existingFacturaId IS NOT NULL THEN
+                    -- Update existing factura with the new service details and taxes
+                    UPDATE Facturas f
+                    SET
+                        f.impuestosFactura = f.impuestosFactura + (servicePrice * 0.18),
+                        f.totalFactura = f.totalFactura + (servicePrice * 1.28),
+                        f.iscFactura = f.iscFactura + (servicePrice * 0.10),
+                        f.updatedAt = CURRENT_TIMESTAMP()
+                    WHERE f.idFactura = existingFacturaId;
+                ELSE
+                    -- Prepare initial billing (Factura)
+                    INSERT INTO Facturas (
+                        idCliente,
+                        idContrato,
+                        idTipoComprobante,
+                        fechaFactura,
+                        metodoPagoFactura,
+                        impuestosFactura, -- ITBIS tax
+                        totalFactura,     -- Total including ISC and ITBIS tax
+                        iscFactura,       -- ISC tax
+                        createdAt,
+                        updatedAt
+                    ) VALUES (
+                        input_idCliente,
+                        contractCreated,
+                        defaultTipoComprobante, -- Use the default idTipoComprobante
+                        CURRENT_TIMESTAMP(),
+                        'Pendiente',
+                        totalImpuestosFactura, -- ITBIS tax - 18%
+                        totalFactura,          -- Total including ISC and ITBIS tax
+                        totalIscFactura,       -- ISC tax - 10%
+                        CURRENT_TIMESTAMP(),
+                        CURRENT_TIMESTAMP()
+                    );
+                    -- Set existingFacturaId to the newly created factura
+                    SET existingFacturaId = LAST_INSERT_ID();
+                END IF;
+    
+                -- Decrement the service count
+                SET serviceCount = serviceCount - 1;
+            END WHILE;
+            
+            -- Check if everything went well
+            IF contractCreated > 0 THEN
+                SELECT 'Bundle contract and pending billing created successfully' AS message;
+            ELSE
+                SELECT 'Failed to create contract or billing' AS message;
+            END IF;
+        END;
+      `,
+    },
+    {
       name: "InsertAllServices",
       sql: `
         CREATE PROCEDURE InsertAllServices()

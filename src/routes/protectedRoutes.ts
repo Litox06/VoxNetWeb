@@ -8,6 +8,7 @@ import {
 } from "../controllers/metodoPagoController";
 import { updateClientInfo } from "../controllers/clienteController";
 import { subscribeToService } from "../controllers/serviciosController";
+import { subscribeToBundle } from "../controllers/serviciosBundleController";
 
 const router = Router();
 
@@ -29,5 +30,6 @@ router.delete("/payment-methods/delete/:idMetodoPago", deletePaymentMethod);
 
 // Services routes
 router.post("/services/subscribe", subscribeToService);
+router.post("/services/subscribe-bundle", subscribeToBundle);
 
 export default router;
