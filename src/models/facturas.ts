@@ -29,7 +29,7 @@ Factura.init(
     },
     idContrato: {
       type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: "Contratos",
         key: "idContrato",
@@ -57,7 +57,7 @@ Factura.init(
     },
     iscFactura: {
       type: DataTypes.FLOAT,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {

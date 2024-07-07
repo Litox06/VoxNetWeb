@@ -787,6 +787,89 @@ export const createProcedures = async () => {
       `,
     },
     {
+      name: "ComprarProducto",
+      sql: `
+        CREATE PROCEDURE ComprarProducto(
+            IN input_idCliente INT,
+            IN input_idProducto INT
+        )
+        BEGIN
+            DECLARE defaultTipoComprobante INT;
+            DECLARE productDescription VARCHAR(500);
+            DECLARE productPrice DECIMAL(10, 2);
+            DECLARE newFacturaId INT;
+            DECLARE totalImpuestosFactura DECIMAL(10, 2);
+            DECLARE totalFactura DECIMAL(10, 2);
+            
+            -- Get the default idTipoComprobante
+            SELECT idTipoComprobante INTO defaultTipoComprobante 
+            FROM Comprobante 
+            WHERE tipoComprobante = 'N/A' 
+            LIMIT 1;
+    
+            -- Get the product description and price
+            SELECT descripcionProducto, precioProducto 
+            INTO productDescription, productPrice 
+            FROM Productos 
+            WHERE idProducto = input_idProducto 
+            LIMIT 1;
+            
+            -- Debugging: Check if the productDescription and productPrice are correctly retrieved
+            IF productDescription IS NULL THEN
+                SET productDescription = 'No description available';
+            END IF;
+    
+            -- Calculate the totals
+            SET totalImpuestosFactura = productPrice * 0.18;
+            SET totalFactura = productPrice * 1.18;
+    
+            -- Create a new factura
+            INSERT INTO Facturas (
+                idCliente,
+                idTipoComprobante,
+                fechaFactura,
+                metodoPagoFactura,
+                impuestosFactura, -- ITBIS tax
+                totalFactura,     -- Total including ITBIS tax
+                createdAt,
+                updatedAt
+            ) VALUES (
+                input_idCliente,
+                defaultTipoComprobante, -- Use the default idTipoComprobante
+                CURRENT_TIMESTAMP(),
+                'Pendiente',
+                totalImpuestosFactura, -- ITBIS tax - 18%
+                totalFactura,          -- Total including ITBIS tax
+                CURRENT_TIMESTAMP(),
+                CURRENT_TIMESTAMP()
+            );
+    
+            -- Get the ID of the newly created factura
+            SET newFacturaId = LAST_INSERT_ID();
+    
+            -- Insert the product into ProductosFacturas
+            INSERT INTO ProductosFacturas (
+                idFactura,
+                idProducto,
+                createdAt,
+                updatedAt
+            ) VALUES (
+                newFacturaId,
+                input_idProducto,
+                CURRENT_TIMESTAMP(),
+                CURRENT_TIMESTAMP()
+            );
+    
+            -- Check if everything went well
+            IF newFacturaId IS NOT NULL THEN
+                SELECT 'Product added to new invoice successfully' AS message;
+            ELSE
+                SELECT 'Failed to create invoice or add product' AS message;
+            END IF;
+        END;
+      `,
+    },
+    {
       name: "GetAllServices",
       sql: `
         CREATE PROCEDURE GetAllServices()
