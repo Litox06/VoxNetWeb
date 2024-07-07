@@ -429,6 +429,71 @@ export const createProcedures = async () => {
       `,
     },
     {
+      name: "UpdateServicePlan",
+      sql: `
+        CREATE PROCEDURE UpdateServicePlan(
+            IN input_idCliente INT,
+            IN input_currentIdServicio INT,
+            IN input_newIdServicio INT
+        )
+        BEGIN
+            DECLARE currentContractState VARCHAR(50);
+            DECLARE newServiceDescription VARCHAR(255);
+            DECLARE currentContractId INT;
+            DECLARE existingFacturaId INT;
+            DECLARE newTotalImpuestosFactura DECIMAL(10, 2);
+            DECLARE newTotalFactura DECIMAL(10, 2);
+            DECLARE newTotalIscFactura DECIMAL(10, 2);
+            
+            -- Get the current contract state and contract ID
+            SELECT estadoContrato, idContrato INTO currentContractState, currentContractId
+            FROM Contratos
+            WHERE idCliente = input_idCliente AND idServicio = input_currentIdServicio
+            LIMIT 1;
+            
+            -- Check if the current contract state allows updating
+            IF currentContractState NOT IN ('Activo: Pago Atrasado', 'Inactivo: Pago Vencido') THEN
+                -- Get the new service description
+                SELECT descripcionServicio INTO newServiceDescription
+                FROM Servicios
+                WHERE idServicio = input_newIdServicio
+                LIMIT 1;
+                
+                -- Update the contract with the new service
+                UPDATE Contratos
+                SET idServicio = input_newIdServicio,
+                    descripcionContrato = newServiceDescription,
+                    updatedAt = CURRENT_TIMESTAMP()
+                WHERE idCliente = input_idCliente AND idServicio = input_currentIdServicio;
+                
+                -- Get the existing factura ID
+                SELECT idFactura INTO existingFacturaId
+                FROM Facturas
+                WHERE idContrato = currentContractId
+                LIMIT 1;
+                
+                -- Calculate the new totals for the factura
+                SET newTotalImpuestosFactura = (SELECT precioServicio * 0.18 FROM Servicios WHERE idServicio = input_newIdServicio);
+                SET newTotalFactura = (SELECT precioServicio * 1.28 FROM Servicios WHERE idServicio = input_newIdServicio);
+                SET newTotalIscFactura = (SELECT precioServicio * 0.10 FROM Servicios WHERE idServicio = input_newIdServicio);
+                
+                -- Update the existing factura with the new service details and taxes
+                UPDATE Facturas
+                SET
+                    impuestosFactura = newTotalImpuestosFactura,
+                    totalFactura = newTotalFactura,
+                    iscFactura = newTotalIscFactura,
+                    updatedAt = CURRENT_TIMESTAMP()
+                WHERE idFactura = existingFacturaId;
+                
+                SELECT 'Service plan updated and billing details adjusted successfully' AS message;
+            ELSE
+                SELECT 'Cannot update service plan: Contract is either overdue or inactive' AS message;
+            END IF;
+        END;
+      `,
+    },
+    {
       name: "InsertAllServices",
       sql: `
         CREATE PROCEDURE InsertAllServices()
@@ -580,6 +645,21 @@ export const createProcedures = async () => {
             -- VXSpotsPass
             INSERT INTO Servicios (nombreServicio, descripcionServicio, precioServicio, createdAt, updatedAt)
             VALUES ('VXSpots Pass', 'Acceso a cientos de hotspots en territorio nacional.', 600, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+        END;
+      `,
+    },
+    {
+      name: "GetAllServices",
+      sql: `
+        CREATE PROCEDURE GetAllServices()
+        BEGIN
+            SELECT 
+                idServicio,
+                nombreServicio,
+                descripcionServicio,
+                precioServicio
+            FROM 
+                Servicios;
         END;
       `,
     },

@@ -1,6 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/database";
-import Contrato from "./contratos";
 
 class Factura extends Model {
   public idFactura!: number;

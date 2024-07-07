@@ -364,6 +364,91 @@
           }
         }
       }
+    },
+    "/api/client-portal/services/update-plan": {
+      "put": {
+        "summary": "Update service plan",
+        "description": "Allows a client to upgrade or downgrade their service plan if the current contract state allows it.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["currentIdServicio", "newIdServicio"],
+                "properties": {
+                  "currentIdServicio": {
+                    "type": "integer",
+                    "description": "The ID of the current service"
+                  },
+                  "newIdServicio": {
+                    "type": "integer",
+                    "description": "The ID of the new service to upgrade/downgrade to"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service plan updated and billing details adjusted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed to update service plan"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/client-portal/services/get-all": {
+      "get": {
+        "summary": "Get all services",
+        "description": "Retrieve all available services",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Services retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "services": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "idServicio": { "type": "integer" },
+                          "nombreServicio": { "type": "string" },
+                          "descripcionServicio": { "type": "string" },
+                          "precioServicio": { "type": "number" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "No services found" },
+          "500": { "description": "Server error during retrieval process" }
+        }
+      }
     }
   },
   "components": {

@@ -10,7 +10,9 @@ import { updateClientInfo } from "../controllers/clienteController";
 import {
   subscribeToService,
   subscribeToBundle,
-  getSubscribedServices
+  getSubscribedServices,
+  updateServicePlan,
+  getAllServices,
 } from "../controllers/serviciosController";
 
 const router = Router();
@@ -35,4 +37,6 @@ router.delete("/payment-methods/delete/:idMetodoPago", deletePaymentMethod);
 router.post("/services/subscribe", subscribeToService);
 router.post("/services/subscribe-bundle", subscribeToBundle);
 router.get("/services/subscribed", getSubscribedServices);
+router.put("/services/update-plan", updateServicePlan);
+router.get("/services/get-all", getAllServices);
 export default router;

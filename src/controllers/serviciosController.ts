@@ -2,6 +2,25 @@ import { Request, Response } from "express";
 import sequelize from "../config/database";
 import { IGetUserAuthInfoRequest } from "../interfaces/cliente";
 
+export const getAllServices = async (req: Request, res: Response) => {
+  try {
+    // Calling the stored procedure
+    const result = await sequelize.query("CALL GetAllServices()");
+
+    if (result) {
+      return res.status(200).json({
+        message: "Services retrieved successfully",
+        services: result,
+      });
+    } else {
+      return res.status(404).json({ message: "No services found" });
+    }
+  } catch (error) {
+    console.error("Error retrieving services:", error);
+    res.status(500).json({ message: "Server error during retrieval process" });
+  }
+};
+
 export const subscribeToService = async (
   req: IGetUserAuthInfoRequest,
   res: Response
@@ -43,17 +62,24 @@ export const subscribeToBundle = async (
   req: IGetUserAuthInfoRequest,
   res: Response
 ) => {
-  const { idServicios } = req.body; // expecting an array of service IDs
+  const { idServicios } = req.body;
   const idCliente = req.userId;
 
   try {
-    // Calling the stored procedure
+    // Ensure idServicios is an array and convert it to JSON
+    if (!Array.isArray(idServicios) || idServicios.length < 2) {
+      return res.status(400).json({
+        message: "At least two services are required for a bundle subscription",
+      });
+    }
+    const idServiciosJson = JSON.stringify(idServicios);
+
     const result = await sequelize.query(
       "CALL SubscribeToBundle(:idCliente, :idServicios)",
       {
         replacements: {
           idCliente,
-          idServicios: idServicios.join(","),
+          idServicios: idServiciosJson,
         },
       }
     );
@@ -99,3 +125,36 @@ export const getSubscribedServices = async (
   }
 };
 
+export const updateServicePlan = async (
+  req: IGetUserAuthInfoRequest,
+  res: Response
+) => {
+  const { currentIdServicio, newIdServicio } = req.body;
+  const idCliente = req.userId;
+
+  try {
+    const result = await sequelize.query(
+      "CALL UpdateServicePlan(:idCliente, :currentIdServicio, :newIdServicio)",
+      {
+        replacements: {
+          idCliente,
+          currentIdServicio,
+          newIdServicio,
+        },
+      }
+    );
+
+    if (result) {
+      return res.status(200).json({
+        message:
+          "Service plan updated and billing details adjusted successfully",
+        details: result,
+      });
+    } else {
+      return res.status(400).json({ message: "Failed to update service plan" });
+    }
+  } catch (error) {
+    console.error("Error updating service plan:", error);
+    res.status(500).json({ message: "Server error during plan update" });
+  }
+};
