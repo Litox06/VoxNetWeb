@@ -50,6 +50,35 @@ ServiciosContrato.sync()
 
     await createProcedures();
 
+    const comprobanteCount = await Comprobante.count({
+      where: { tipoComprobante: "N/A" },
+    });
+    if (comprobanteCount === 0) {
+      try {
+        await Comprobante.create({
+          tipoComprobante: "N/A",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+        console.log("Default Comprobante inserted successfully");
+      } catch (error) {
+        console.error("Error inserting default Comprobante:", error);
+      }
+    } else {
+      console.log("Default Comprobante already exists. Skipping insertion.");
+    }
+
+    const servicesCount = await Servicio.count();
+    if (servicesCount === 0) {
+      try {
+        const result = await sequelize.query("CALL InsertAllServices()");
+        console.log("Services inserted successfully");
+      } catch (error) {
+        console.error("Error inserting services:", error);
+      }
+    } else {
+      console.log("Services already exist. Skipping insertion.");
+    }
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
     });

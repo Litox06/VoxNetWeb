@@ -20,7 +20,7 @@ Servicio.init(
       allowNull: false,
     },
     descripcionServicio: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     precioServicio: {
