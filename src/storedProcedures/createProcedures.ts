@@ -32,7 +32,7 @@ export const createProcedures = async () => {
             INSERT INTO Clientes (
                 nombreCliente, direccionCliente, telefonoCliente, correoCliente, cedulaCliente, passwordCliente, createdAt, updatedAt
             ) VALUES (
-                nombreCliente, direccionCliente, telefonoCliente, correoCliente, cedulaCliente, passwordCliente, NOW(), NOW()
+                nombreCliente, direccionCliente, telefonoCliente, correoCliente, cedulaCliente, passwordCliente, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()
             );
         END;
       `,
@@ -68,7 +68,7 @@ export const createProcedures = async () => {
         )
         BEGIN
             UPDATE Clientes 
-            SET passwordCliente = newPasswordCliente, updatedAt = NOW()
+            SET passwordCliente = newPasswordCliente, updatedAt = CURRENT_TIMESTAMP()
             WHERE correoCliente = correo;
         END;
       `,
@@ -87,7 +87,7 @@ export const createProcedures = async () => {
             INSERT INTO MetodoPago (
                 numeroTarjeta, titularTarjeta, vencimiento, cvv, idCliente, createdAt, updatedAt
             ) VALUES (
-                numeroTarjeta, titularTarjeta, vencimiento, cvv, idCliente, NOW(), NOW()
+                numeroTarjeta, titularTarjeta, vencimiento, cvv, idCliente, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()
             );
         END;
       `,
@@ -143,7 +143,7 @@ export const createProcedures = async () => {
                 correoCliente = COALESCE(input_correoCliente, correoCliente),
                 direccionCliente = COALESCE(input_direccionCliente, direccionCliente),
                 passwordCliente = IF(input_newPasswordCliente IS NOT NULL, input_newPasswordCliente, passwordCliente),
-                updatedAt = NOW()
+                updatedAt = CURRENT_TIMESTAMP()
             WHERE idCliente = input_idCliente;
         END;
       `,
@@ -159,6 +159,11 @@ export const createProcedures = async () => {
             DECLARE contractCreated INT;
             DECLARE defaultTipoComprobante INT;
             DECLARE serviceDescription VARCHAR(255);
+            DECLARE existingFacturaId INT;
+            DECLARE existingContratoId INT;
+            DECLARE totalImpuestosFactura DECIMAL(10, 2);
+            DECLARE totalFactura DECIMAL(10, 2);
+            DECLARE totalIscFactura DECIMAL(10, 2);
             
             -- Get the default idTipoComprobante
             SELECT idTipoComprobante INTO defaultTipoComprobante FROM Comprobante WHERE tipoComprobante = 'N/A' LIMIT 1;
@@ -171,54 +176,102 @@ export const createProcedures = async () => {
                 SET serviceDescription = 'No description available';
             END IF;
             
-            -- Create a new contract
-            INSERT INTO Contratos (
-                idCliente,
-                idServicio,
-                fechaInicioContrato,
-                fechaFinContrato,
-                descripcionContrato,
-                estadoContrato,
-                createdAt,
-                updatedAt
-            ) VALUES (
-                input_idCliente,
-                input_idServicio,
-                NOW(),
-                DATE_ADD(NOW(), INTERVAL 1 MONTH),
-                serviceDescription,
-                'Pago Pendiente',
-                NOW(),
-                NOW()
-            );
+            -- Check for existing factura with state 'Pendiente de Activación: Pago Requerido'
+            SELECT f.idFactura, c.idContrato INTO existingFacturaId, existingContratoId
+            FROM Facturas f
+            JOIN Contratos c ON f.idContrato = c.idContrato
+            WHERE c.idCliente = input_idCliente AND c.estadoContrato = 'Pendiente de Activación: Pago Requerido' LIMIT 1;
             
-            -- Get the ID of the newly created contract
-            SET contractCreated = LAST_INSERT_ID();
-            
-            -- Prepare initial billing (Factura)
-            INSERT INTO Facturas (
-                idCliente,
-                idContrato,
-                idTipoComprobante,
-                fechaFactura,
-                metodoPagoFactura,
-                impuestosFactura, -- ITBIS tax
-                totalFactura,     -- Total including ISC and ITBIS tax
-                iscFactura,       -- ISC tax
-                createdAt,
-                updatedAt
-            ) VALUES (
-                input_idCliente,
-                contractCreated,
-                defaultTipoComprobante, -- Use the default idTipoComprobante
-                NOW(),
-                'Pendiente',
-                (SELECT precioServicio * 0.18 FROM Servicios WHERE idServicio = input_idServicio), -- ITBIS tax - 18%
-                (SELECT precioServicio * 1.28 FROM Servicios WHERE idServicio = input_idServicio), -- Total including ISC and ITBIS tax
-                (SELECT precioServicio * 0.10 FROM Servicios WHERE idServicio = input_idServicio), -- ISC tax - 10%
-                NOW(),
-                NOW()
-            );
+            -- If an existing factura is found, append to it
+            IF existingFacturaId IS NOT NULL THEN
+                -- Create a new contract
+                INSERT INTO Contratos (
+                    idCliente,
+                    idServicio,
+                    fechaInicioContrato,
+                    fechaFinContrato,
+                    descripcionContrato,
+                    estadoContrato,
+                    createdAt,
+                    updatedAt
+                ) VALUES (
+                    input_idCliente,
+                    input_idServicio,
+                    CURRENT_TIMESTAMP(),
+                    DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL 1 MONTH),
+                    serviceDescription,
+                    'Pendiente de Activación: Pago Requerido',
+                    CURRENT_TIMESTAMP(),
+                    CURRENT_TIMESTAMP()
+                );
+                
+                -- Get the ID of the newly created contract
+                SET contractCreated = LAST_INSERT_ID();
+                
+                -- Calculate the new totals
+                SET totalImpuestosFactura = (SELECT precioServicio * 0.18 FROM Servicios WHERE idServicio = input_idServicio);
+                SET totalFactura = (SELECT precioServicio * 1.28 FROM Servicios WHERE idServicio = input_idServicio);
+                SET totalIscFactura = (SELECT precioServicio * 0.10 FROM Servicios WHERE idServicio = input_idServicio);
+                
+                -- Update existing factura with the new service details and taxes
+                UPDATE Facturas f
+                SET
+                    f.impuestosFactura = f.impuestosFactura + totalImpuestosFactura,
+                    f.totalFactura = f.totalFactura + totalFactura,
+                    f.iscFactura = f.iscFactura + totalIscFactura,
+                    f.updatedAt = CURRENT_TIMESTAMP()
+                WHERE f.idFactura = existingFacturaId;
+                
+            ELSE
+                -- Create a new contract
+                INSERT INTO Contratos (
+                    idCliente,
+                    idServicio,
+                    fechaInicioContrato,
+                    fechaFinContrato,
+                    descripcionContrato,
+                    estadoContrato,
+                    createdAt,
+                    updatedAt
+                ) VALUES (
+                    input_idCliente,
+                    input_idServicio,
+                    CURRENT_TIMESTAMP(),
+                    DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL 1 MONTH),
+                    serviceDescription,
+                    'Pendiente de Activación: Pago Requerido',
+                    CURRENT_TIMESTAMP(),
+                    CURRENT_TIMESTAMP()
+                );
+                
+                -- Get the ID of the newly created contract
+                SET contractCreated = LAST_INSERT_ID();
+                
+                -- Prepare initial billing (Factura)
+                INSERT INTO Facturas (
+                    idCliente,
+                    idContrato,
+                    idTipoComprobante,
+                    fechaFactura,
+                    metodoPagoFactura,
+                    impuestosFactura, -- ITBIS tax
+                    totalFactura,     -- Total including ISC and ITBIS tax
+                    iscFactura,       -- ISC tax
+                    createdAt,
+                    updatedAt
+                ) VALUES (
+                    input_idCliente,
+                    contractCreated,
+                    defaultTipoComprobante, -- Use the default idTipoComprobante
+                    CURRENT_TIMESTAMP(),
+                    'Pendiente',
+                    (SELECT precioServicio * 0.18 FROM Servicios WHERE idServicio = input_idServicio), -- ITBIS tax - 18%
+                    (SELECT precioServicio * 1.28 FROM Servicios WHERE idServicio = input_idServicio), -- Total including ISC and ITBIS tax
+                    (SELECT precioServicio * 0.10 FROM Servicios WHERE idServicio = input_idServicio), -- ISC tax - 10%
+                    CURRENT_TIMESTAMP(),
+                    CURRENT_TIMESTAMP()
+                );
+            END IF;
             
             -- Check if everything went well
             IF contractCreated > 0 THEN
