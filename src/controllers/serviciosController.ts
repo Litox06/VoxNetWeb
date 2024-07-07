@@ -195,3 +195,30 @@ export const cancelService = async (
       .json({ message: "Server error during service cancellation process" });
   }
 };
+
+export const removeServiceFromFactura = async (
+  req: IGetUserAuthInfoRequest,
+  res: Response
+) => {
+  const { idFactura, idServicio } = req.body;
+
+  try {
+    // Calling the stored procedure
+    await sequelize.query(
+      "CALL RemoveServiceFromFactura(:idFactura, :idServicio)",
+      {
+        replacements: {
+          idFactura,
+          idServicio,
+        },
+      }
+    );
+
+    return res
+      .status(200)
+      .json({ message: "Service removed from invoice successfully" });
+  } catch (error) {
+    console.error("Error removing service from invoice:", error);
+    res.status(500).json({ message: "Server error during removal process" });
+  }
+};

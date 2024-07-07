@@ -951,6 +951,69 @@ export const createProcedures = async () => {
         END;
       `,
     },
+    {
+      name: "RemoveServiceFromFactura",
+      sql: `
+        CREATE PROCEDURE RemoveServiceFromFactura(
+            IN input_idFactura INT,
+            IN input_idServicio INT
+        )
+        BEGIN
+            DECLARE servicePrice DECIMAL(10, 2);
+            DECLARE impuestosToSubtract DECIMAL(10, 2);
+            DECLARE totalToSubtract DECIMAL(10, 2);
+            DECLARE iscToSubtract DECIMAL(10, 2);
+            DECLARE contractId INT;
+            DECLARE latestContractId INT;
+    
+            -- Get the service price
+            SELECT precioServicio INTO servicePrice 
+            FROM Servicios 
+            WHERE idServicio = input_idServicio 
+            LIMIT 1;
+    
+            -- Calculate the amounts to subtract
+            SET impuestosToSubtract = servicePrice * 0.18;
+            SET iscToSubtract = servicePrice * 0.10;
+            SET totalToSubtract = servicePrice + impuestosToSubtract + iscToSubtract;
+    
+            -- Get the contract ID related to the service and invoice
+            SELECT idContrato INTO contractId
+            FROM Contratos 
+            WHERE idServicio = input_idServicio
+            AND idCliente = (SELECT idCliente FROM Facturas WHERE idFactura = input_idFactura)
+            LIMIT 1;
+    
+            -- Remove the contract associated with the service
+            DELETE FROM Contratos
+            WHERE idContrato = contractId
+            AND idServicio = input_idServicio;
+    
+            -- Get the latest contract ID for the client
+            SELECT idContrato INTO latestContractId
+            FROM Contratos
+            WHERE idCliente = (SELECT idCliente FROM Facturas WHERE idFactura = input_idFactura)
+            ORDER BY updatedAt DESC
+            LIMIT 1;
+    
+            -- Update the factura totals and set the latest contract ID
+            UPDATE Facturas 
+            SET 
+                idContrato = IFNULL(latestContractId, NULL),
+                impuestosFactura = impuestosFactura - impuestosToSubtract,
+                totalFactura = totalFactura - totalToSubtract,
+                iscFactura = iscFactura - iscToSubtract,
+                updatedAt = CURRENT_TIMESTAMP()
+            WHERE idFactura = input_idFactura;
+    
+            -- Check if the factura has any other contracts left
+            IF (SELECT COUNT(*) FROM Contratos WHERE idCliente = (SELECT idCliente FROM Facturas WHERE idFactura = input_idFactura)) = 0 THEN
+                -- Delete the factura if no contracts are left
+                DELETE FROM Facturas WHERE idFactura = input_idFactura;
+            END IF;
+        END;
+      `,
+    },
   ];
 
   try {

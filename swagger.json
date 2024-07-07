@@ -774,6 +774,84 @@
           }
         }
       }
+    },
+    "/api/client-portal/services/remove": {
+      "delete": {
+        "tags": ["Services"],
+        "summary": "Remove a service from an invoice",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idFactura": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "idServicio": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                },
+                "required": ["idFactura", "idServicio"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service removed from invoice successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Service removed from invoice successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed to remove service from invoice",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Failed to remove service from invoice"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error during removal process",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Server error during removal process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

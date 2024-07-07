@@ -14,6 +14,7 @@ import {
   updateServicePlan,
   getAllServices,
   cancelService,
+  removeServiceFromFactura,
 } from "../controllers/serviciosController";
 import {
   comprarProducto,
@@ -46,6 +47,7 @@ router.get("/services/subscribed", getSubscribedServices);
 router.put("/services/update-plan", updateServicePlan);
 router.get("/services/get-all", getAllServices);
 router.delete("/services/cancel", cancelService);
+router.delete("/services/remove", removeServiceFromFactura);
 
 // Product routes
 router.post("/products/buy", comprarProducto);
