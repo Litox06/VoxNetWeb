@@ -16,7 +16,6 @@ import ProductoFactura from "./models/productosFacturas";
 import Factura from "./models/facturas";
 import Comprobante from "./models/comprobante";
 import Categoria from "./models/categoria";
-import ServiciosContrato from "./models/serviciosContratos";
 
 const app = express();
 
@@ -43,8 +42,7 @@ Producto.sync();
 MetodoPago.sync();
 Contrato.sync();
 Factura.sync();
-ProductoFactura.sync();
-ServiciosContrato.sync()
+ProductoFactura.sync()
   .then(async () => {
     console.log("Database synced");
 
