@@ -494,6 +494,67 @@ export const createProcedures = async () => {
       `,
     },
     {
+      name: "CancelService",
+      sql: `
+        CREATE PROCEDURE CancelService(
+            IN input_idCliente INT,
+            IN input_idServicio INT
+        )
+        BEGIN
+            DECLARE var_contractState VARCHAR(50);
+            DECLARE var_serviceDescription VARCHAR(255);
+            DECLARE var_contractId INT;
+            DECLARE var_facturaId INT;
+            DECLARE var_servicePrice DECIMAL(10, 2);
+            DECLARE var_totalImpuestosFactura DECIMAL(10, 2);
+            DECLARE var_totalFactura DECIMAL(10, 2);
+            DECLARE var_totalIscFactura DECIMAL(10, 2);
+    
+            -- Get the current contract state and description
+            SELECT estadoContrato, descripcionContrato, idContrato INTO var_contractState, var_serviceDescription, var_contractId
+            FROM Contratos
+            WHERE idCliente = input_idCliente AND idServicio = input_idServicio
+            LIMIT 1;
+    
+            -- Check if the contract state allows cancellation
+            IF var_contractState = 'Activo: Al Día' OR var_serviceDescription LIKE '%NOW%' THEN
+                -- Get the factura ID associated with the contract
+                SELECT idFactura INTO var_facturaId
+                FROM Facturas
+                WHERE idContrato = var_contractId
+                LIMIT 1;
+    
+                -- Get the service price for calculation
+                SELECT precioServicio INTO var_servicePrice FROM Servicios WHERE idServicio = input_idServicio LIMIT 1;
+    
+                -- Calculate the new totals for the factura
+                SET var_totalImpuestosFactura = IFNULL((SELECT impuestosFactura - (var_servicePrice * 0.18) FROM Facturas WHERE idFactura = var_facturaId), 0);
+                SET var_totalFactura = IFNULL((SELECT totalFactura - (var_servicePrice * 1.28) FROM Facturas WHERE idFactura = var_facturaId), 0);
+                SET var_totalIscFactura = IFNULL((SELECT iscFactura - (var_servicePrice * 0.10) FROM Facturas WHERE idFactura = var_facturaId), 0);
+    
+                -- Update the existing factura with the new totals
+                UPDATE Facturas
+                SET
+                    impuestosFactura = var_totalImpuestosFactura,
+                    totalFactura = var_totalFactura,
+                    iscFactura = var_totalIscFactura,
+                    updatedAt = CURRENT_TIMESTAMP()
+                WHERE idFactura = var_facturaId;
+    
+                -- Mark the contract as canceled
+                UPDATE Contratos
+                SET estadoContrato = 'Cancelado',
+                    updatedAt = CURRENT_TIMESTAMP()
+                WHERE idContrato = var_contractId;
+    
+                SELECT 'Service canceled and billing updated successfully' AS message;
+            ELSE
+                SELECT 'Cannot cancel service: Contract is either not in good standing or not a NOW service' AS message;
+            END IF;
+        END;
+      `,
+    },
+    {
       name: "InsertAllServices",
       sql: `
         CREATE PROCEDURE InsertAllServices()

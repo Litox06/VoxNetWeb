@@ -158,3 +158,40 @@ export const updateServicePlan = async (
     res.status(500).json({ message: "Server error during plan update" });
   }
 };
+
+export const cancelService = async (
+  req: IGetUserAuthInfoRequest,
+  res: Response
+) => {
+  const { idServicio } = req.body;
+  const idCliente = req.userId;
+
+  try {
+    // Calling the stored procedure
+    const result = await sequelize.query(
+      "CALL CancelService(:idCliente, :idServicio)",
+      {
+        replacements: {
+          idCliente,
+          idServicio,
+        },
+      }
+    );
+
+    if (result) {
+      return res.status(200).json({
+        message: "Service canceled and billing updated successfully",
+        details: result,
+      });
+    } else {
+      return res.status(400).json({
+        message: "Failed to cancel service",
+      });
+    }
+  } catch (error) {
+    console.error("Error canceling service:", error);
+    res
+      .status(500)
+      .json({ message: "Server error during service cancellation process" });
+  }
+};

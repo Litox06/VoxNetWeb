@@ -414,6 +414,71 @@
         }
       }
     },
+    "/api/client-portal/services/cancel": {
+      "delete": {
+        "summary": "Cancel a service",
+        "description": "Allows a client to cancel a service if the contract state is 'Activo: Al Día' or the service description contains 'NOW'.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["idServicio"],
+                "properties": {
+                  "idServicio": {
+                    "type": "integer",
+                    "description": "The ID of the service to cancel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service canceled successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed to cancel service or contract state does not allow cancellation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error during service cancellation process",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/client-portal/services/get-all": {
       "get": {
         "summary": "Get all services",

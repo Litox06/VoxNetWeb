@@ -13,6 +13,7 @@ import {
   getSubscribedServices,
   updateServicePlan,
   getAllServices,
+  cancelService,
 } from "../controllers/serviciosController";
 
 const router = Router();
@@ -39,4 +40,6 @@ router.post("/services/subscribe-bundle", subscribeToBundle);
 router.get("/services/subscribed", getSubscribedServices);
 router.put("/services/update-plan", updateServicePlan);
 router.get("/services/get-all", getAllServices);
+router.delete("/services/cancel", cancelService);
+
 export default router;
