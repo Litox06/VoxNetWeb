@@ -966,45 +966,41 @@ export const createProcedures = async () => {
       sql: `
         CREATE PROCEDURE PayFactura(
             IN input_idFactura INT,
-            IN input_idMetodoPago INT,
-            IN paymentAmount DECIMAL(10,2)
+            IN input_metodoPagoFactura VARCHAR(50),
+            IN paymentAmount INT  -- This comes from Stripe in centimos equivalent
         )
         BEGIN
-            DECLARE facturaTotal DECIMAL(10,2);
+            DECLARE total DECIMAL(10,2);
+            DECLARE convertedPaymentAmount DECIMAL(10,2);
             DECLARE clienteID INT;
-            DECLARE contratoID INT DEFAULT NULL; -- Default to NULL if no contract is associated
-            DECLARE estadoContrato VARCHAR(50);
+            DECLARE contratoID INT;
+            DECLARE estado VARCHAR(50);
+    
+            -- Convert Stripe's centimos equivalent back to normal currency format
+            SET convertedPaymentAmount = paymentAmount / 100.00;
     
             -- Select relevant factura details
-            SELECT idCliente, idContrato, totalFactura INTO clienteID, contratoID, facturaTotal
-            FROM Facturas 
-            WHERE idFactura = input_idFactura;
+            SELECT f.totalFactura, f.idCliente, c.idContrato, c.estadoContrato
+            INTO total, clienteID, contratoID, estado
+            FROM Facturas f
+            LEFT JOIN Contratos c ON f.idContrato = c.idContrato
+            WHERE f.idFactura = input_idFactura;
     
-            -- Ensure the payment amount matches the total factura amount
-            IF paymentAmount = facturaTotal THEN
-                -- Proceed with payment processing
-                -- Update Factura to reflect payment
+            -- Check if converted payment amount matches the total factura amount
+            IF convertedPaymentAmount = total THEN
+                -- Update all unpaid Facturas for the client
                 UPDATE Facturas 
-                SET metodoPagoFactura = 'Pagado',
+                SET metodoPagoFactura = input_metodoPagoFactura,
                     updatedAt = CURRENT_TIMESTAMP()
-                WHERE idFactura = input_idFactura;
+                WHERE idCliente = clienteID AND metodoPagoFactura = 'Pendiente';
     
-                -- Check if there is an associated contract
-                IF contratoID IS NOT NULL THEN
-                    -- Fetch current contract status
-                    SELECT estadoContrato INTO estadoContrato FROM Contratos WHERE idContrato = contratoID;
+                -- Update all contracts for the client
+                UPDATE Contratos
+                SET estadoContrato = 'Activo: Al Día',
+                    updatedAt = CURRENT_TIMESTAMP()
+                WHERE idCliente = clienteID AND estadoContrato IN ('Pendiente de Activación: Pago Requerido', 'Activo: Pago Pendiente', 'Activo: Pago Atrasado');
     
-                    -- Determine new contract state based on existing state
-                    IF estadoContrato IN ('Pendiente de Activación: Pago Requerido', 'Activo: Pago Pendiente', 'Activo: Pago Atrasado') THEN
-                        -- Update contract state to "Activo: Al Día"
-                        UPDATE Contratos
-                        SET estadoContrato = 'Activo: Al Día',
-                            updatedAt = CURRENT_TIMESTAMP()
-                        WHERE idContrato = contratoID;
-                    END IF;
-                END IF;
-    
-                SELECT 'Payment successful, factura updated, contract status adjusted if applicable.' AS message;
+                SELECT 'Payment successful, all facturas updated, contract statuses adjusted.' AS message;
             ELSE
                 SELECT 'Payment amount does not match factura total.' AS message;
             END IF;

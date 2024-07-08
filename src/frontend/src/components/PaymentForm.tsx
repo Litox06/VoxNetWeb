@@ -49,7 +49,6 @@ const CheckoutForm: React.FC = () => {
             },
           }
         );
-        console.log("Invoice details response:", response);
         if (response.data.success && response.data.charges.length > 0) {
           const totalAmount = response.data.charges.reduce(
             (acc: number, charge: any) => acc + charge.totalFactura,
@@ -91,7 +90,6 @@ const CheckoutForm: React.FC = () => {
     if (error) {
       console.log("[error]", error);
     } else {
-      console.log("[PaymentMethod]", paymentMethod);
       try {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -117,7 +115,6 @@ const CheckoutForm: React.FC = () => {
 
         if (response.data.success) {
           setPaymentStatus("Payment successful!");
-          console.log("Payment successful:", response.data.charge);
         } else {
           setPaymentStatus("Payment failed. Please try again.");
           console.error("Payment failed:", response.data.message);
@@ -151,8 +148,10 @@ const CheckoutForm: React.FC = () => {
               </p>
               <p>
                 <b>Monto:</b>{" "}
-                {Math.round(detail.totalFactura / 1).toLocaleString("en-EN")}{" "}
-                DOP
+                {new Intl.NumberFormat("es-DO", {
+                  style: "currency",
+                  currency: "DOP",
+                }).format(detail.totalFactura)}
               </p>
               <p>
                 <b>Fecha:</b>{" "}
@@ -180,7 +179,12 @@ const CheckoutForm: React.FC = () => {
           className="btn btn-primary btn-block mt-3"
           disabled={!stripe || amount === 0}
         >
-          Pay {Math.round(amount / 1).toLocaleString("en-EN")} DOP
+          Pay{" "}
+          {new Intl.NumberFormat("es-DO", {
+            style: "currency",
+            currency: "DOP",
+          }).format(amount)}{" "}
+          DOP
         </button>
       </form>
       {paymentStatus && <p className="payment-status">{paymentStatus}</p>}
