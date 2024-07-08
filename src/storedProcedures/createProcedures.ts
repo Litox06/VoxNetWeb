@@ -1034,7 +1034,8 @@ export const createProcedures = async () => {
             LEFT JOIN 
                 Contratos AS c ON f.idContrato = c.idContrato
             WHERE 
-                f.idCliente = input_idCliente;
+                f.idCliente = input_idCliente
+                AND f.metodoPagoFactura = 'PENDIENTE';
         END;
       `,
     },
