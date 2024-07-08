@@ -1014,6 +1014,87 @@ export const createProcedures = async () => {
         END;
       `,
     },
+    {
+      name: "PayFactura",
+      sql: `
+        CREATE PROCEDURE PayFactura(
+            IN input_idFactura INT,
+            IN input_idMetodoPago INT,
+            IN paymentAmount DECIMAL(10,2)
+        )
+        BEGIN
+            DECLARE facturaTotal DECIMAL(10,2);
+            DECLARE clienteID INT;
+            DECLARE contratoID INT DEFAULT NULL; -- Default to NULL if no contract is associated
+            DECLARE estadoContrato VARCHAR(50);
+    
+            -- Select relevant factura details
+            SELECT idCliente, idContrato, totalFactura INTO clienteID, contratoID, facturaTotal
+            FROM Facturas 
+            WHERE idFactura = input_idFactura;
+    
+            -- Ensure the payment amount matches the total factura amount
+            IF paymentAmount = facturaTotal THEN
+                -- Proceed with payment processing
+                -- Update Factura to reflect payment
+                UPDATE Facturas 
+                SET metodoPagoFactura = 'Pagado',
+                    updatedAt = CURRENT_TIMESTAMP()
+                WHERE idFactura = input_idFactura;
+    
+                -- Check if there is an associated contract
+                IF contratoID IS NOT NULL THEN
+                    -- Fetch current contract status
+                    SELECT estadoContrato INTO estadoContrato FROM Contratos WHERE idContrato = contratoID;
+    
+                    -- Determine new contract state based on existing state
+                    IF estadoContrato IN ('Pendiente de Activación: Pago Requerido', 'Activo: Pago Pendiente', 'Activo: Pago Atrasado') THEN
+                        -- Update contract state to "Activo: Al Día"
+                        UPDATE Contratos
+                        SET estadoContrato = 'Activo: Al Día',
+                            updatedAt = CURRENT_TIMESTAMP()
+                        WHERE idContrato = contratoID;
+                    END IF;
+                END IF;
+    
+                SELECT 'Payment successful, factura updated, contract status adjusted if applicable.' AS message;
+            ELSE
+                SELECT 'Payment amount does not match factura total.' AS message;
+            END IF;
+        END;
+      `,
+    },
+    {
+      name: "GetClientCharges",
+      sql: `
+        CREATE PROCEDURE GetClientCharges(
+            IN input_idCliente INT
+        )
+        BEGIN
+            SELECT 
+                f.idFactura,
+                f.fechaFactura,
+                f.metodoPagoFactura,
+                f.impuestosFactura,
+                f.totalFactura,
+                f.iscFactura,
+                f.createdAt,
+                f.updatedAt,
+                c.idContrato,
+                c.idServicio,
+                c.fechaInicioContrato,
+                c.fechaFinContrato,
+                c.descripcionContrato,
+                c.estadoContrato
+            FROM 
+                Facturas AS f
+            LEFT JOIN 
+                Contratos AS c ON f.idContrato = c.idContrato
+            WHERE 
+                f.idCliente = input_idCliente;
+        END;
+      `,
+    },
   ];
 
   try {

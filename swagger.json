@@ -852,6 +852,153 @@
           }
         }
       }
+    },
+    "/api/client-portal/charges/client": {
+      "get": {
+        "tags": ["Billing"],
+        "summary": "Get charges for the client",
+        "description": "Fetches all charges related to the signed-in client including Facturas and associated contracts.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Charges retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "idFactura": {
+                        "type": "integer"
+                      },
+                      "idCliente": {
+                        "type": "integer"
+                      },
+                      "totalFactura": {
+                        "type": "number"
+                      },
+                      "contratos": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "idContrato": {
+                              "type": "integer"
+                            },
+                            "estadoContrato": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error fetching charges"
+          }
+        }
+      }
+    },
+    "/api/client-portal/checkout/charge": {
+      "post": {
+        "tags": ["Checkout"],
+        "summary": "Create a charge for a payment",
+        "description": "This endpoint is used to create a payment charge through Stripe.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "integer",
+                    "example": 1000,
+                    "description": "Amount to be charged in cents."
+                  },
+                  "source": {
+                    "type": "string",
+                    "example": "src_abcdefghijk00000000000000",
+                    "description": "Token representing payment source (e.g., card)."
+                  },
+                  "currency": {
+                    "type": "string",
+                    "default": "usd",
+                    "description": "Currency of the charge."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Charge created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "charge": {
+                      "$ref": "#/components/schemas/Charge"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to create charge"
+          }
+        }
+      }
+    },
+    "/api/client-portal/checkout/charges": {
+      "get": {
+        "tags": ["Checkout"],
+        "summary": "Get history of payments made by client",
+        "description": "Retrieve a list of all payments made by the client through Stripe.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Charges retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Charge"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to retrieve charges"
+          }
+        }
+      }
     }
   },
   "components": {

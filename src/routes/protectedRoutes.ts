@@ -21,6 +21,7 @@ import {
   getAllProducts,
   removeProductoFromFactura,
 } from "../controllers/productoController";
+import { createCharge, getCharges, getClientCharges } from "../controllers/pagoController";
 
 const router = Router();
 
@@ -53,4 +54,11 @@ router.delete("/services/remove", removeServiceFromFactura);
 router.post("/products/buy", comprarProducto);
 router.get("/products/get-all", getAllProducts);
 router.delete("/products/remove", removeProductoFromFactura);
+
+// Billing routes
+router.get('/charges/client', getClientCharges);
+
+// Checkout routers
+router.post('/checkout/charge', createCharge);
+router.get('/checkout/charges', getCharges); // History of payments made by client
 export default router;

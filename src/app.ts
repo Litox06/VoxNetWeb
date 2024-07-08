@@ -1,4 +1,5 @@
 import express from "express";
+import cors from 'cors';
 import swaggerUi from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
@@ -22,7 +23,7 @@ const app = express();
 const swaggerDocument = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, "../swagger.json"), "utf8")
 );
-
+app.use(cors());
 app.use(express.json());
 
 // Swagger setup
