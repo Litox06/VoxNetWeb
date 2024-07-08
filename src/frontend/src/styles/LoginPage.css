@@ -1,0 +1,126 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
+
+body,
+html {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 110%;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.login-content {
+  display: flex;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 1100px;
+  width: 100%;
+  text-align: center;
+}
+
+.login-form-section {
+  padding: 44px; 
+  flex: 1;
+}
+
+.login-logo {
+  margin-bottom: 22px; 
+  width: 275px;
+  height: auto;
+}
+
+h1 {
+  margin-bottom: 11px; 
+  font-family: "Poppins", sans-serif; 
+}
+
+p {
+  font-family: "Poppins", sans-serif; 
+  font-size: 1.1em; 
+}
+
+.login-form {
+  margin-top: 22px; 
+}
+
+.input-wrapper {
+  margin-bottom: 11px; 
+  font-family: "Poppins";
+  display: flex;
+  align-items: center;
+  padding: 6px; 
+  border-radius: 6px; 
+  position: relative; 
+  border: 1px solid #064281; 
+}
+
+.input-wrapper img {
+  margin-right: 6px; 
+  width: 22px; 
+  height: 22px; 
+}
+
+input {
+  border: none;
+  background: none;
+  outline: none;
+  width: 100%;
+  font-size: 1.1em; 
+}
+
+.toggle-password {
+  position: absolute;
+  right: 11px; 
+  width: 22px; 
+  height: 22px; 
+  cursor: pointer;
+}
+
+.login-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 11px; 
+}
+
+.login-links {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 22px;
+}
+
+.login-button {
+  background-color: #064281;
+  color: white;
+  border: none;
+  padding: 11px 22px;
+  border-radius: 16px; 
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-size: 1.1em; 
+}
+
+.forgot-password,
+.register-link {
+  color: #064281;
+  text-decoration: underline;
+  font-family: "Poppins", sans-serif;
+  font-size: 1.1em; 
+}
+
+.login-decorative {
+  flex: 1;
+  background: url("../assets/loginRelevantImage.png") no-repeat center center;
+  background-size: contain;
+  border-radius: 0 8px 8px 0;
+}

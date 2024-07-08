@@ -4,6 +4,7 @@ import LoginPage from "./components/LoginPage";
 import PaymentPage from "./components/PaymentPage";
 import PaymentConfirmation from "./components/PaymentConfirmation";
 import ProtectedRoute from "./components/ProtectedRoute";
+import "./index.css";
 import "./App.css";
 
 const App: React.FC = () => {
