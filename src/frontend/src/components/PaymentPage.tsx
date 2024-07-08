@@ -1,5 +1,5 @@
 import React from 'react';
-import PaymentForm from '../components/PaymentForm';
+import PaymentForm from './PaymentForm';
 
 const PaymentPage: React.FC = () => {
   return (

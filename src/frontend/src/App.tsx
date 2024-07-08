@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
-import PaymentPage from "./pages/PaymentPage";
-import PaymentConfirmation from "./pages/PaymentConfirmation";
+import LoginPage from "./components/LoginPage";
+import PaymentPage from "./components/PaymentPage";
+import PaymentConfirmation from "./components/PaymentConfirmation";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 
