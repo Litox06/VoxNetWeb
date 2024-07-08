@@ -54,6 +54,7 @@ const LoginPage: React.FC = () => {
             <div className="input-wrapper">
               <img src={passwordIcon} alt="Password Icon" />
               <input
+                autoComplete="new-password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -68,10 +69,10 @@ const LoginPage: React.FC = () => {
               />
             </div>
             <div className="login-links">
-            <Link to="/reset-password" className="forgot-password">
+              <Link to="/reset-password" className="forgot-password">
                 ¿Contraseña olvidada?
               </Link>
-              <a href="#" className="register-link">
+              <a href="/register" className="register-link">
                 Registrarme
               </a>
             </div>

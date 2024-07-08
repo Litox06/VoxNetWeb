@@ -60,6 +60,7 @@ const UpdatePassword: React.FC = () => {
             </div>
             <div className="update-password-input-wrapper">
               <input
+                autoComplete="new-password"
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

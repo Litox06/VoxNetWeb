@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import sequelize from "../config/database";
 import { generateSalt, hashCredential } from "../utils/hash";
 import jwt from "jsonwebtoken";
-import { abbreviateAddress } from "../utils/address";
 import nodemailer from "nodemailer";
 import {
   IRegisterRequest,
@@ -11,41 +10,22 @@ import {
 } from "../interfaces/cliente";
 
 export const register = async (req: IRegisterRequest, res: Response) => {
-  const {
-    nombreCliente,
-    direccion,
-    sector,
-    ciudad,
-    provincia,
-    telefonoCliente,
-    correoCliente,
-    cedulaCliente,
-    password,
-  } = req.body;
-
+  const { password } = req.body;
   const salt = generateSalt();
   const hashedPassword = hashCredential(password, salt);
-
-  // Abreviar la direccion
-  const direccionCliente = abbreviateAddress(
-    direccion,
-    sector,
-    ciudad,
-    provincia
-  );
 
   try {
     // Llamar al stored procedure para insertar un nuevo cliente
     await sequelize.query(
-      "CALL InsertCliente(:nombreCliente, :direccionCliente, :telefonoCliente, :correoCliente, :cedulaCliente, :passwordCliente)",
+      "CALL InsertCliente(:nombreCliente, :direccion, :telefonoCliente, :correoCliente, :cedulaCliente, :password)",
       {
         replacements: {
-          nombreCliente,
-          direccionCliente,
-          telefonoCliente,
-          correoCliente,
-          cedulaCliente,
-          passwordCliente: hashedPassword,
+          nombreCliente: req.body.nombreCliente,
+          direccion: req.body.direccion,
+          telefonoCliente: req.body.telefonoCliente,
+          correoCliente: req.body.correoCliente,
+          cedulaCliente: req.body.cedulaCliente,
+          password: hashedPassword,
         },
       }
     );

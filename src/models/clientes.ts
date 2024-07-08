@@ -24,7 +24,7 @@ Cliente.init(
       allowNull: false,
     },
     direccionCliente: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(500),
       allowNull: false,
     },
     telefonoCliente: {

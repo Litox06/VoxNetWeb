@@ -6,6 +6,7 @@ import PaymentConfirmation from "./components/PaymentConfirmation";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SendResetPassword from "./components/SendResetPassword";
 import UpdatePassword from "./components/UpdatePassword";
+import Register from "./components/Register";
 import "./index.css";
 import "./App.css";
 
@@ -16,6 +17,7 @@ const App: React.FC = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset-password" element={<SendResetPassword />} />
         <Route path="/reset-password/:token" element={<UpdatePassword />} />
+        <Route path="/register" element={<Register />} />
         <Route
           path="/payment"
           element={<ProtectedRoute component={PaymentPage} />}

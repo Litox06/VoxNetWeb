@@ -1,0 +1,92 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
+
+.register-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.register-content {
+  display: flex;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 550px; /* Further reduced size */
+  width: 90%; /* Further reduced size */
+  text-align: center;
+}
+
+.register-form-section {
+  padding: 14px; /* Further reduced padding */
+  flex: 1;
+}
+
+.register-logo {
+  margin-bottom: 12px; /* Further reduced margin */
+  width: 160px; /* Further reduced size */
+  height: auto;
+}
+
+.register-title {
+  margin-bottom: 6px; /* Further reduced margin */
+  font-family: "Poppins", sans-serif;
+}
+
+.register-form {
+  margin-top: 12px; /* Further reduced margin */
+}
+
+.register .input-wrapper {
+  margin-bottom: 8px; /* Further reduced margin */
+  font-family: "Poppins";
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+  position: relative;
+  border: 1px solid #064281;
+  width: 100%; /* Set to full width */
+  max-width: 320px; /* Added max-width to keep it compact */
+  margin: 0 auto;
+}
+
+.register input,
+.register select {
+  border: none;
+  background: none;
+  outline: none;
+  width: 100%;
+  padding: 7px; /* Further reduced padding */
+}
+
+.register .toggle-password {
+  position: absolute;
+  right: 8px;
+  cursor: pointer;
+}
+
+.register-button {
+  background-color: #064281;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  width: 100%; /* Set to full width */
+  max-width: 320px; /* Added max-width to keep it compact */
+  margin: 12px auto 0; /* Further reduced margin */
+}
+
+.register-error {
+  color: red;
+  margin-bottom: 12px;
+}
+
+.required-asterisk {
+    color: red;
+    margin-right: 2px;
+  }
+  
