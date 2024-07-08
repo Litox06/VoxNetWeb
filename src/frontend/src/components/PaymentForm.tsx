@@ -104,7 +104,7 @@ const CheckoutForm: React.FC = () => {
             source: paymentMethod.id,
             currency: "dop",
             idFactura: idFactura,
-            idMetodoPago: 1,
+            metodoPagoFactura: null,
           },
           {
             headers: {
@@ -147,7 +147,34 @@ const CheckoutForm: React.FC = () => {
                 <b>ID de la Factura:</b> {detail.idFactura}
               </p>
               <p>
-                <b>Monto:</b>{" "}
+                <b>Subtotal:</b>{" "}
+                {new Intl.NumberFormat("es-DO", {
+                  style: "currency",
+                  currency: "DOP",
+                }).format(
+                  detail.totalFactura -
+                    detail.impuestosFactura -
+                    detail.iscFactura
+                )}
+              </p>
+              <p>
+                <b>ITBIS:</b>{" "}
+                {new Intl.NumberFormat("es-DO", {
+                  style: "currency",
+                  currency: "DOP",
+                }).format(detail.impuestosFactura)}
+              </p>
+              {detail.iscFactura && (
+                <p>
+                  <b>ISC:</b>{" "}
+                  {new Intl.NumberFormat("es-DO", {
+                    style: "currency",
+                    currency: "DOP",
+                  }).format(detail.iscFactura)}
+                </p>
+              )}
+              <p>
+                <b>Total:</b>{" "}
                 {new Intl.NumberFormat("es-DO", {
                   style: "currency",
                   currency: "DOP",
