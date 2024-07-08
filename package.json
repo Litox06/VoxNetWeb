@@ -2,9 +2,10 @@
   "name": "voxnet",
   "version": "1.0.0",
   "scripts": {
-    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start": "concurrently \"npm run start:backend\" \"npm run build:frontend && npm run start:frontend\"",
     "start:backend": "nodemon src/app.ts",
-    "start:frontend": "npm --prefix src/frontend start"
+    "start:frontend": "npm --prefix src/frontend start",
+    "build:frontend": "npm --prefix src/frontend run build"
   },
   "devDependencies": {
     "@types/stripe": "^8.0.417",

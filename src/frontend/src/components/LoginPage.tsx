@@ -6,6 +6,7 @@ import emailIcon from "../assets/emailIcon.png";
 import passwordIcon from "../assets/passwordIcon.png";
 import showPasswordIcon from "../assets/showPasswordIcon.png";
 import hidePasswordIcon from "../assets/hidePasswordIcon.png";
+import { Link } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -67,9 +68,9 @@ const LoginPage: React.FC = () => {
               />
             </div>
             <div className="login-links">
-              <a href="#" className="forgot-password">
+            <Link to="/reset-password" className="forgot-password">
                 ¿Contraseña olvidada?
-              </a>
+              </Link>
               <a href="#" className="register-link">
                 Registrarme
               </a>
