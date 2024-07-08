@@ -1,5 +1,4 @@
 import Cliente from "./clientes";
-import MetodoPago from "./metodoPago";
 import Categoria from "./categoria";
 import Producto from "./productos";
 import Factura from "./facturas";
@@ -7,18 +6,6 @@ import ProductoFactura from "./productosFacturas";
 import Comprobante from "./comprobante";
 import Contrato from "./contratos";
 import Servicio from "./servicios";
-
-// Cliente has many MetodoPago
-Cliente.hasMany(MetodoPago, {
-  foreignKey: "idCliente",
-  as: "metodosPago",
-});
-
-// MetodoPago belongs to Cliente
-MetodoPago.belongsTo(Cliente, {
-  foreignKey: "idCliente",
-  as: "cliente",
-});
 
 // Categoria has many Producto
 Categoria.hasMany(Producto, {

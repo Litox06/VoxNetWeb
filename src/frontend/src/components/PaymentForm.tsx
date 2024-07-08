@@ -102,11 +102,11 @@ const CheckoutForm: React.FC = () => {
         const response = await axios.post(
           `${apiUrl}/api/client-portal/checkout/charge`,
           {
-            amount: amount * 100, // Convert to cents if required by your backend
+            amount: amount,
             source: paymentMethod.id,
             currency: "dop",
             idFactura: idFactura,
-            idMetodoPago: 1, // Example idMetodoPago, replace with the actual method ID
+            idMetodoPago: 1,
           },
           {
             headers: {
@@ -150,10 +150,17 @@ const CheckoutForm: React.FC = () => {
                 <b>ID de la Factura:</b> {detail.idFactura}
               </p>
               <p>
-                <b>Monto:</b> {Math.round(detail.totalFactura / 1).toLocaleString('en-EN')} DOP
+                <b>Monto:</b>{" "}
+                {Math.round(detail.totalFactura / 1).toLocaleString("en-EN")}{" "}
+                DOP
               </p>
               <p>
-                <b>Fecha:</b> {detail.fechaFactura.slice(0, 10)}
+                <b>Fecha:</b>{" "}
+                {new Date(detail.fechaFactura).toLocaleDateString("es-ES", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
               </p>
             </div>
           ))}
@@ -162,7 +169,10 @@ const CheckoutForm: React.FC = () => {
       <form onSubmit={handleSubmit} className="payment-form mt-4">
         <div className="card">
           <div className="card-body">
-            <CardElement className="form-control" />
+            <CardElement
+              className="form-control"
+              options={{ hidePostalCode: true }}
+            />
           </div>
         </div>
         <button
@@ -170,7 +180,7 @@ const CheckoutForm: React.FC = () => {
           className="btn btn-primary btn-block mt-3"
           disabled={!stripe || amount === 0}
         >
-          Pay {Math.round(amount / 1).toLocaleString('en-EN')} DOP
+          Pay {Math.round(amount / 1).toLocaleString("en-EN")} DOP
         </button>
       </form>
       {paymentStatus && <p className="payment-status">{paymentStatus}</p>}

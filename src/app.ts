@@ -8,7 +8,6 @@ import protectedRoutes from "./routes/protectedRoutes";
 import sequelize from "./config/database";
 import { createProcedures } from "./storedProcedures/createProcedures";
 import Cliente from "./models/clientes";
-import MetodoPago from "./models/metodoPago";
 import "./models/associations";
 import Servicio from "./models/servicios";
 import Producto from "./models/productos";
@@ -40,7 +39,6 @@ Comprobante.sync();
 Cliente.sync();
 Servicio.sync();
 Producto.sync();
-MetodoPago.sync();
 Contrato.sync();
 Factura.sync();
 ProductoFactura.sync()

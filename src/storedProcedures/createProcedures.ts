@@ -74,59 +74,6 @@ export const createProcedures = async () => {
       `,
     },
     {
-      name: "InsertMetodoPago",
-      sql: `
-        CREATE PROCEDURE InsertMetodoPago(
-            IN numeroTarjeta VARCHAR(64),
-            IN titularTarjeta VARCHAR(100),
-            IN vencimiento VARCHAR(5),
-            IN cvv VARCHAR(3),
-            IN idCliente INT
-        )
-        BEGIN
-            INSERT INTO MetodoPago (
-                numeroTarjeta, titularTarjeta, vencimiento, cvv, idCliente, createdAt, updatedAt
-            ) VALUES (
-                numeroTarjeta, titularTarjeta, vencimiento, cvv, idCliente, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()
-            );
-        END;
-      `,
-    },
-    {
-      name: "GetPaymentMethods",
-      sql: `
-        CREATE PROCEDURE GetPaymentMethods(
-            IN input_idCliente INT
-        )
-        BEGIN
-            SELECT * FROM MetodoPago WHERE idCliente = input_idCliente;
-        END;
-      `,
-    },
-    {
-      name: "CheckMetodoPagoOwnership",
-      sql: `
-        CREATE PROCEDURE CheckMetodoPagoOwnership(
-            IN input_idMetodoPago INT,
-            IN input_idCliente INT
-        )
-        BEGIN
-            SELECT * FROM MetodoPago WHERE idMetodoPago = input_idMetodoPago AND idCliente = input_idCliente;
-        END;
-      `,
-    },
-    {
-      name: "DeleteMetodoPago",
-      sql: `
-        CREATE PROCEDURE DeleteMetodoPago(
-            IN input_idMetodoPago INT
-        )
-        BEGIN
-            DELETE FROM MetodoPago WHERE idMetodoPago = input_idMetodoPago;
-        END;
-      `,
-    },
-    {
       name: "UpdateClient",
       sql: `
         CREATE PROCEDURE UpdateClient(

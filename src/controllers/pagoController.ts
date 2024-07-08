@@ -57,7 +57,7 @@ export const getClientCharges = async (
   req: IGetUserAuthInfoRequest,
   res: Response
 ) => {
-  const idCliente = req.userId; // Assuming userId is stored in req upon authentication
+  const idCliente = req.userId;
 
   try {
     const charges = await sequelize.query(
