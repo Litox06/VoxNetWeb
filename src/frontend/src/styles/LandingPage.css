@@ -1,0 +1,491 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap");
+
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.landing-page .landing-content {
+  text-align: center;
+  margin-top: 20px;
+
+  background-color: #f4f4f4 !important; /* Ensure background color consistency */
+}
+
+.landing-page .landing-content h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.landing-page .landing-content p {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+}
+
+.landing-page .landing-ad {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.landing-page .landing-ad-rectangle {
+  background-color: #fcf600;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.landing-page .ad-text {
+  flex: 1;
+  font-family: "Poppins", sans-serif;
+  margin-left: 200px;
+}
+
+.landing-page .ad-text h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.landing-page .ad-text h3 {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.landing-page .ad-text p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.landing-page .ad-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.landing-page .ad-right h4 {
+  font-size: 50px;
+  font-weight: 700;
+  padding-right: 300px;
+  margin-bottom: 10px;
+}
+
+.landing-page .ad-button {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-right: 300px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.landing-page .ad-right a {
+  font-size: 15px;
+}
+
+.landing-page .ad-right b {
+  font-size: 15px;
+}
+
+.landing-page .ad-link {
+  font-size: 14px;
+  color: black;
+  text-decoration: none;
+  margin-right: 300px;
+}
+
+.landing-page .ad-link:hover {
+  text-decoration: underline;
+}
+
+.landing-page .ad-image {
+  height: auto;
+  max-width: 300px;
+  margin-left: 20px;
+}
+
+/* Internet Residencial */
+.internet-residencial {
+  text-align: center;
+  margin: 20px 0;
+  background-color: #f4f4f4; /* Ensure background color consistency */
+}
+
+.internet-residencial h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.internet-residencial p {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.internet-residencial-cards {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.internet-residencial .card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  padding: 20px;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.internet-residencial .card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.internet-residencial .card p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.internet-residencial .card button {
+  background-color: #064189;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.internet-residencial .card button:hover {
+  background-color: #053164;
+}
+
+/* Voz Residencial */
+.voz-residencial {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.voz-residencial h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.voz-residencial p {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.voz-residencial-cards {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.voz-residencial .card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  padding: 20px;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.voz-residencial .card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.voz-residencial .card p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.voz-residencial .card button {
+  background-color: #064189;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.voz-residencial .card button:hover {
+  background-color: #053164;
+}
+
+.movil-postpago {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.movil-postpago h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.movil-postpago p {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.movil-postpago-cards {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.movil-postpago .card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  padding: 20px;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.movil-postpago .card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.movil-postpago .card p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.movil-postpago .card button {
+  background-color: #064189;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.movil-postpago .card button:hover {
+  background-color: #053164;
+}
+
+.movil-prepago {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.movil-prepago h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.movil-prepago p {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.movil-prepago-cards {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.movil-prepago .card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  padding: 20px;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.movil-prepago .card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.movil-prepago .card p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.movil-prepago .card button {
+  background-color: #064189;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.movil-prepago .card button:hover {
+  background-color: #053164;
+}
+
+.vxtv-plans {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.vxtv-plans h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.vxtv-plans-cards {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.vxtv-plans-cards .card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  padding: 20px;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.vxtv-plans-cards .card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.vxtv-plans-cards .card p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.vxtv-plans-cards .card button {
+  background-color: #064189;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.vxtv-plans-cards .card button:hover {
+  background-color: #053164;
+}
+
+.roaming-plans {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.roaming-plans h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.roaming-plans p {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.roaming-plans-cards {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.roaming-plans .card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  padding: 20px;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.roaming-plans .card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.roaming-plans .card p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.roaming-plans .card button {
+  background-color: #064189;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.roaming-plans .card button:hover {
+  background-color: #053164;
+}
+
+.roaming-allies {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.roaming-allies h3 {
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.allies-logos {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.allies-logos .logo-image {
+  width: 100px;
+  height: auto;
+}
+
+.allies-logos .logo-text {
+  width: 250px;
+  height: auto;
+}

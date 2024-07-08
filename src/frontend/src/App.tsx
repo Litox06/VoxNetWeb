@@ -9,11 +9,13 @@ import UpdatePassword from "./components/UpdatePassword";
 import Register from "./components/Register";
 import "./index.css";
 import "./App.css";
+import LandingPage from "./components/LandingPage";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset-password" element={<SendResetPassword />} />
         <Route path="/reset-password/:token" element={<UpdatePassword />} />
