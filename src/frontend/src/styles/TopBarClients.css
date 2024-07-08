@@ -1,0 +1,78 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap");
+
+.topbar-clients {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif;
+  margin-top: 0;
+}
+
+.topbar-clients .topbar-logo {
+  width: 100px;
+  margin-right: 20px;
+}
+
+.topbar-clients .topbar-links {
+  display: flex;
+  gap: 53px;
+  flex: 1;
+}
+
+.topbar-clients .topbar-links a {
+  text-decoration: none;
+  color: rgb(88, 87, 87);
+  font-weight: 200 !important;
+  font-family: "Poppins", sans-serif;
+  position: relative;
+}
+
+.topbar-clients .topbar-links a:hover {
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+.topbar-clients .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  padding: 10px;
+  border-radius: 4px;
+  top: 100%;
+  left: 0;
+  width: 250px; /* Adjust as needed */
+}
+
+.topbar-clients .dropdown-content a:hover {
+  background-color: #f0f0f0;
+}
+
+.topbar-clients .dropdown-content a {
+  text-decoration: none;
+  display: block;
+  padding: 8px 16px;
+  color: rgb(88, 87, 87);
+}
+
+.topbar-clients .topbar-links .dropdown:hover .dropdown-content {
+  display: block;
+  border-radius: 5px;
+}
+
+.topbar-clients .topbar-icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.topbar-clients .topbar-icons img {
+  width: 20px;
+  cursor: pointer;
+}

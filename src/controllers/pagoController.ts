@@ -30,7 +30,7 @@ export const createCharge = async (req: Request, res: Response) => {
       payment_method: source,
       description: "Factura para el producto/servicio de VoxNet",
       confirm: true,
-      return_url: "http://localhost:3000/payment-confirmation",
+      return_url: "http://localhost:8080/payment-confirmation",
       metadata: {
         idFactura,
         metodoPagoFactura,

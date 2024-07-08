@@ -1,5 +1,6 @@
 import React from "react";
 import TopBarNonClients from "./TopBarNonClients";
+import TopBarClients from "./TopBarClients";
 import adLandingPage from "../assets/adLandingPage.png";
 import "../styles/LandingPage.css";
 import orange from "../assets/orange.png";
@@ -10,9 +11,11 @@ import telefonica from "../assets/telefonica.png";
 import Footer from "./Footer";
 
 const LandingPage: React.FC = () => {
+  const token = localStorage.getItem("token");
+  console.log("token is: ", token);
   return (
     <>
-      <TopBarNonClients />
+      {token ? <TopBarClients /> : <TopBarNonClients />}
       <div className="landing-page">
         <div className="landing-content">
           <h1>Veni, Vidi, Vici: Conquista el Mundo con VoxNet</h1>
