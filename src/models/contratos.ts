@@ -9,6 +9,7 @@ class Contrato extends Model {
   public fechaFinContrato!: Date;
   public descripcionContrato!: string;
   public estadoContrato!: string;
+  public feeApplied!: boolean;
 }
 
 Contrato.init(
@@ -41,6 +42,11 @@ Contrato.init(
     estadoContrato: {
       type: DataTypes.STRING(50),
       allowNull: false,
+    },
+    feeApplied: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
   },
   {
