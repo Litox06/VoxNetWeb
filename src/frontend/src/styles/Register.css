@@ -13,33 +13,33 @@
   background: white;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 550px; /* Further reduced size */
-  width: 90%; /* Further reduced size */
+  max-width: 550px; 
+  width: 90%;
   text-align: center;
 }
 
 .register-form-section {
-  padding: 14px; /* Further reduced padding */
+  padding: 14px;
   flex: 1;
 }
 
 .register-logo {
-  margin-bottom: 12px; /* Further reduced margin */
-  width: 160px; /* Further reduced size */
+  margin-bottom: 12px;
+  width: 160px;
   height: auto;
 }
 
 .register-title {
-  margin-bottom: 6px; /* Further reduced margin */
+  margin-bottom: 6px;
   font-family: "Poppins", sans-serif;
 }
 
 .register-form {
-  margin-top: 12px; /* Further reduced margin */
+  margin-top: 12px;
 }
 
 .register .input-wrapper {
-  margin-bottom: 8px; /* Further reduced margin */
+  margin-bottom: 8px;
   font-family: "Poppins";
   display: flex;
   align-items: center;
@@ -47,8 +47,8 @@
   border-radius: 4px;
   position: relative;
   border: 1px solid #064281;
-  width: 100%; /* Set to full width */
-  max-width: 320px; /* Added max-width to keep it compact */
+  width: 100%;
+  max-width: 320px;
   margin: 0 auto;
 }
 
@@ -58,7 +58,7 @@
   background: none;
   outline: none;
   width: 100%;
-  padding: 7px; /* Further reduced padding */
+  padding: 7px;
 }
 
 .register .toggle-password {
@@ -75,9 +75,9 @@
   border-radius: 12px;
   cursor: pointer;
   font-family: "Poppins", sans-serif;
-  width: 100%; /* Set to full width */
-  max-width: 320px; /* Added max-width to keep it compact */
-  margin: 12px auto 0; /* Further reduced margin */
+  width: 100%;
+  max-width: 320px;
+  margin: 12px auto 0;
 }
 
 .register-error {

@@ -10,7 +10,7 @@
     "outDir": "./dist",
     "resolveJsonModule": true,
     "types": ["node"],
-    "baseUrl": "./src" // Add this line
+    "baseUrl": "./src"
   },
   "include": ["src/**/*", "src/express.d.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]

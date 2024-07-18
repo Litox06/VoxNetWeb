@@ -11,7 +11,7 @@
   text-align: center;
   margin-top: 20px;
 
-  background-color: #f4f4f4 !important; /* Ensure background color consistency */
+  background-color: #f4f4f4 !important;
 }
 
 .landing-page .landing-content h1 {
@@ -113,11 +113,10 @@
   margin-left: 20px;
 }
 
-/* Internet Residencial */
 .internet-residencial {
   text-align: center;
   margin: 20px 0;
-  background-color: #f4f4f4; /* Ensure background color consistency */
+  background-color: #f4f4f4;
 }
 
 .internet-residencial h2 {

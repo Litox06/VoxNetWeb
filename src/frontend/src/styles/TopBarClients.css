@@ -47,7 +47,7 @@
   border-radius: 4px;
   top: 100%;
   left: 0;
-  width: 250px; /* Adjust as needed */
+  width: 250px;
 }
 
 .topbar-clients .dropdown-content a:hover {

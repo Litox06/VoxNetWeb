@@ -27,17 +27,17 @@ app.use(express.json());
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "frontend/build")));
 
-// Catch-all handler to serve React's index.html for all other routes
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
-});
-
 // Swagger setup
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Define routes
 app.use("/api/auth", authRoutes);
 app.use("/api/client-portal", protectedRoutes);
+
+// Catch-all handler to serve React's index.html for all other routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
+});
 
 const PORT = 8080;
 sequelize;
