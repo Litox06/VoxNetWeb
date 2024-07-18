@@ -22,7 +22,7 @@ const LoginPage: React.FC = () => {
         { correoCliente: email, password }
       );
       localStorage.setItem("token", response.data.token); // Store the token in localStorage
-      window.location.href = "/payment";
+      window.location.href = "/";
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         alert("Credenciales invalidas, por favor intente de nuevo.");
