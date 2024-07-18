@@ -51,14 +51,14 @@ const LoginPage: React.FC = () => {
                 required
               />
             </div>
-            <div className="input-wrapper">
+            <div className="input-wrapper" style={{ marginBottom: "0px" }}>
               <img src={passwordIcon} alt="Password Icon" />
               <input
                 autoComplete="new-password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Contraseña"
+                placeholder="●●●●●●●●●"
                 required
               />
               <img
