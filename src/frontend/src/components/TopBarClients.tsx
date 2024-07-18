@@ -1,4 +1,6 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import logo from "../assets/logo.png";
 import phoneIcon from "../assets/phoneIcon.png";
 import locationIcon from "../assets/officesIcon.png";
@@ -7,6 +9,14 @@ import signOutIcon from "../assets/signOutIcon.png";
 import "../styles/TopBarClients.css";
 
 const TopBarClients: React.FC = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <div className="topbar-clients">
       <img src={logo} alt="VoxNet Logo" className="topbar-logo" />
@@ -69,7 +79,12 @@ const TopBarClients: React.FC = () => {
         <img src={phoneIcon} alt="Phone Icon" />
         <img src={locationIcon} alt="Location Icon" />
         <img src={userIcon} alt="User Icon" />
-        <img src={signOutIcon} alt="Sign Out Icon" />
+        <img
+          src={signOutIcon}
+          alt="Sign Out Icon"
+          onClick={handleSignOut}
+          style={{ cursor: "pointer" }}
+        />
       </div>
     </div>
   );
